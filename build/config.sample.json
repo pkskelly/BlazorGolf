@@ -1,0 +1,9 @@
+{
+    "location": "EastUs2",
+    "groupName": "rg-blazorgolf-dev",
+    "swaAppName": "blazorgolf-swa",
+    "repository" : "https://github.com/your-github-username/BlazorGolf" , 
+    "branch": "main",
+    "appLocation": "/src/BlazorGolfClient",
+    "outputLocation": "/wwwroot"
+}
