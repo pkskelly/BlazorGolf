@@ -19,5 +19,4 @@ builder.Services.AddMsalAuthentication(options =>
 
 builder.Services.AddMudServices();
 
-
 await builder.Build().RunAsync();
