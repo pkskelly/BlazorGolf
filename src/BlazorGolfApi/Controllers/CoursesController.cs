@@ -7,7 +7,7 @@ using FluentValidation;
 namespace BlazorGolfApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/courses")]
     [EnableCors("AllowEveryone")]
     public class CoursesController : ControllerBase
     {
@@ -25,16 +25,9 @@ namespace BlazorGolfApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetCourses")]
-        [Route("/api/courses/{id:guid?}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Course>))]        
-        public IActionResult Get(Guid? id)
-        {
-            var result = id.HasValue ? GetCourseById(id.Value) : GetCourses(); 
-            return result;            
-        }       
-
-        private IActionResult GetCourses()
+        // GET: api/courses 
+        [HttpGet(Name="GetCourses")]
+        public IActionResult Get()
         {
             _logger.LogInformation($"GetCourses called with no id"); 
             var rng = new Random();
@@ -49,10 +42,11 @@ namespace BlazorGolfApi.Controllers
             return Ok(courses);
         }
 
-
-        private IActionResult GetCourseById(Guid id)
+        // GET: api/courses/38387939874-0003-30 
+        [HttpGet("{id:guid}", Name="GetCourse")]
+        public IActionResult Get(Guid id)
         {
-            _logger.LogInformation($"GetCourses called with id: {id}"); 
+           _logger.LogInformation($"GetCourses called with id: {id.ToString()}"); 
             return Ok(new Course
             {
                 Id = Guid.NewGuid().ToString(),
@@ -61,30 +55,29 @@ namespace BlazorGolfApi.Controllers
             });
         }
 
-        [HttpPost(Name = "CreateCourses")]
-        [Route("/api/courses")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Course))]        
-        public IActionResult Get(Course course)
+        // POST api/courses
+        [HttpPost]
+        public ActionResult<Course> Post([FromBody] Course course)
         {
             _logger.LogInformation($"CreateCourse called with id: {course.Id}"); 
             var result = _courseValidator.Validate(course);
             if (result.IsValid)
             {
-                return CreatedAtRoute("GetCourses", new { id = course.Id }, course);
+                return CreatedAtRoute("GetCourse", new { id = course.Id }, course);
             }
             else
             {
                 return BadRequest(result.Errors);
             }           
-        }        
-
-        [HttpDelete(Name = "DeleteCourse")]
-        [Route("/api/courses/{id:guid}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]        
-        public IActionResult Get(Guid id)
+        }
+        
+        // DELETE api/courses/6394652d-b853-408a-a2aa-b3b59d8abf82
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]     
+        public IActionResult Delete(Guid id)
         {
             _logger.LogInformation($"DeleteCourse called with id: {id.ToString()}"); 
             return NoContent();
-        }        
+        }
     }
 }
