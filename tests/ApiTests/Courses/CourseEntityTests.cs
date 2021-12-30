@@ -3,7 +3,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using BlazorGolfApi.Entities;
 
-namespace ApiTests
+namespace ApiTests.Courses
 {
     [TestFixture]
     public class CourseEntityTests

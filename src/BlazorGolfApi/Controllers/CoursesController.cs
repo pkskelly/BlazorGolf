@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using BlazorGolfApi.Entities;
 using FluentValidation;
+using BlazorGolfApi.Services;
+using Ardalis.GuardClauses;
 
 namespace BlazorGolfApi.Controllers
 {
@@ -17,42 +19,43 @@ namespace BlazorGolfApi.Controllers
         };
 
         private readonly ILogger<CoursesController> _logger;
+        private readonly IRepository<Course> _repository;
         public IValidator<Course> _courseValidator { get; }
 
-        public CoursesController(IValidator<Course> courseValidator, ILogger<CoursesController> logger)
+
+        public CoursesController(IValidator<Course> courseValidator, IRepository<Course> repository, ILogger<CoursesController> logger)
         {
+            Guard.Against.Null(courseValidator, nameof(courseValidator));
+            Guard.Against.Null(repository, nameof(repository));
+            Guard.Against.Null(logger, nameof(logger));
+
             _courseValidator = courseValidator;
             _logger = logger;
+            _repository = repository;
         }
 
         // GET: api/courses 
-        [HttpGet(Name="GetCourses")]
+        [HttpGet(Name = "GetCourses")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            _logger.LogInformation($"GetCourses called with no id"); 
-            var rng = new Random();
-            var courses =  Enumerable.Range(1, 5).Select(index => new Course
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = _courses[rng.Next(_courses.Length)],
-                Slope = rng.Next(55, 155)
-            })
-            .ToArray();
+            _logger.LogInformation($"GetCourses called with no id");
+            var courses = await _repository.GetAll();
             _logger.LogInformation("GetCourses returning");
             return Ok(courses);
         }
 
-        // GET: api/courses/38387939874-0003-30 
-        [HttpGet("{id:guid}", Name="GetCourse")]
+        // GET: api/courses/6394652d-b853-408a-a2aa-b3b59d8abf82
+        [HttpGet("{id:guid}", Name = "GetCourse")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
-           _logger.LogInformation($"GetCourses called with id: {id.ToString()}"); 
-            if(!id.ToString().EndsWith("2"))
+            _logger.LogInformation($"GetCourses called with id: {id.ToString()}");
+            var course = await _repository.GetById(id.ToString());
+            if (null == course)
             {
-                _logger.LogWarning($"GetCourses called with invalid id: {id.ToString()}"); 
+                _logger.LogWarning($"GetCourses called with invalid id: {id.ToString()}");
                 return NotFound(
                     new
                     {
@@ -60,21 +63,16 @@ namespace BlazorGolfApi.Controllers
                     }
                 );
             }
-            return Ok(new Course
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "Chateau Elan - Woodlands",
-                Slope = 55
-            });
+            return Ok(course);
         }
 
         // POST api/courses
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]     
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]     
-        public ActionResult<Course> Post([FromBody] Course course)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Post([FromBody] Course course)
         {
-            _logger.LogInformation($"CreateCourse called with id: {course.Id}"); 
+            _logger.LogInformation($"CreateCourse called with id: {course.Id}");
             var result = _courseValidator.Validate(course);
             if (result.IsValid)
             {
@@ -83,15 +81,16 @@ namespace BlazorGolfApi.Controllers
             else
             {
                 return BadRequest(result.Errors);
-            }           
+            }
         }
-        
+
         // DELETE api/courses/6394652d-b853-408a-a2aa-b3b59d8abf82
         [HttpDelete("{id:guid}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]     
-        public IActionResult Delete(Guid id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            _logger.LogInformation($"DeleteCourse called with id: {id.ToString()}"); 
+            _logger.LogInformation($"DeleteCourse called with id: {id.ToString()}");
+            await _repository.Remove(id.ToString());
             return NoContent();
         }
     }

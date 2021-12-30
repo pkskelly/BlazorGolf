@@ -1,5 +1,5 @@
 ﻿
-namespace BlazorGolf.Shared
+namespace BlazorGolfClient.Shared
 {
     public class ChatMessage
     {
