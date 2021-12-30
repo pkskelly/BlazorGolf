@@ -27,6 +27,7 @@ namespace BlazorGolfApi.Controllers
 
         // GET: api/courses 
         [HttpGet(Name="GetCourses")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Get()
         {
             _logger.LogInformation($"GetCourses called with no id"); 
@@ -57,6 +58,8 @@ namespace BlazorGolfApi.Controllers
 
         // POST api/courses
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]     
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]     
         public ActionResult<Course> Post([FromBody] Course course)
         {
             _logger.LogInformation($"CreateCourse called with id: {course.Id}"); 
