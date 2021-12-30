@@ -45,9 +45,21 @@ namespace BlazorGolfApi.Controllers
 
         // GET: api/courses/38387939874-0003-30 
         [HttpGet("{id:guid}", Name="GetCourse")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Get(Guid id)
         {
            _logger.LogInformation($"GetCourses called with id: {id.ToString()}"); 
+            if(!id.ToString().EndsWith("2"))
+            {
+                _logger.LogWarning($"GetCourses called with invalid id: {id.ToString()}"); 
+                return NotFound(
+                    new
+                    {
+                        Error = $"Course with id {id.ToString()} not found"
+                    }
+                );
+            }
             return Ok(new Course
             {
                 Id = Guid.NewGuid().ToString(),
