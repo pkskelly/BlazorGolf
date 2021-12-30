@@ -1,12 +1,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
+using FluentValidation;
+using BlazorGolfApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-    
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowEveryone",
