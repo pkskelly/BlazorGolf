@@ -1,6 +1,6 @@
 ﻿using MudBlazor;
 
-namespace BlazorGolf.Shared
+namespace BlazorGolfClient.Shared
 {
     public class ChatUser
     {
