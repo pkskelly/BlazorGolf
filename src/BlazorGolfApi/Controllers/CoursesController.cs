@@ -5,6 +5,7 @@ using BlazorGolfApi.Entities;
 using FluentValidation;
 using BlazorGolfApi.Services;
 using Ardalis.GuardClauses;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorGolfApi.Controllers
 {
@@ -13,15 +14,10 @@ namespace BlazorGolfApi.Controllers
     [EnableCors("AllowEveryone")]
     public class CoursesController : ControllerBase
     {
-        private static readonly string[] _courses = new[]
-        {
-        "Reunion", "Hamilton Mill", "Chateau Elan - Woodlands", "Collins Hill", "Chiocopee Woods"
-        };
 
         private readonly ILogger<CoursesController> _logger;
         private readonly IRepository<Course> _repository;
         public IValidator<Course> _courseValidator { get; }
-
 
         public CoursesController(IValidator<Course> courseValidator, IRepository<Course> repository, ILogger<CoursesController> logger)
         {
@@ -72,15 +68,29 @@ namespace BlazorGolfApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] Course course)
         {
-            _logger.LogInformation($"CreateCourse called with id: {course.Id}");
+
+            _logger.LogInformation($"CreateCourse called with id: {course.CourseID}");
             var result = _courseValidator.Validate(course);
-            if (result.IsValid)
+            try
             {
-                return CreatedAtRoute("GetCourse", new { id = course.Id }, course);
-            }
-            else
+                if (result.IsValid)
+                {
+                    await _repository.Add(course);
+                    return CreatedAtRoute("GetCourse", new { id = course.CourseID }, course);
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            } catch (DbUpdateException ex)
             {
-                return BadRequest(result.Errors);
+                _logger.LogError($"CreateCourse failed with exception: {ex.Message}");
+                return BadRequest(
+                    new
+                    {
+                        Error = $"Course with id {course.CourseID} already exists"
+                    }
+                );
             }
         }
 

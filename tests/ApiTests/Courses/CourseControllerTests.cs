@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
 using FluentAssertions;
 using BlazorGolfApi.Entities;
+using BlazorGolf.Core.Models;
 using Moq;
 using BlazorGolfApi.Services;
 using BlazorGolfApi.Controllers;
@@ -59,14 +60,7 @@ namespace ApiTests.Courses
         public async Task CourseController_GetCourses_ReturnsCourses()
         {
             //Arrange 
-            var courses = new Faker<Course>()
-                //Ensure all properties have rules. By default, StrictMode is false
-                //Set a global policy by using Faker.DefaultStrictMode if you prefer.
-                .StrictMode(true)
-                .RuleFor(c => c.Id, Guid.NewGuid().ToString())
-                .RuleFor(o => o.Name, f => f.Company.CompanyName())
-                .RuleFor(o => o.Slope, f => f.Random.Number(55, 155))
-                .Generate(5);
+            var courses = GetFakeCourses(5);
 
             _courseRepository.Setup(x => x.GetAll()).ReturnsAsync(courses);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
@@ -84,19 +78,12 @@ namespace ApiTests.Courses
         public async Task CourseController_GetCourse_ReturnsCourse()
         {
             //Arrange 
-            var course = new Faker<Course>()
-                //Ensure all properties have rules. By default, StrictMode is false
-                //Set a global policy by using Faker.DefaultStrictMode if you prefer.
-                .StrictMode(true)
-                .RuleFor(c => c.Id, Guid.NewGuid().ToString())
-                .RuleFor(o => o.Name, f => f.Company.CompanyName())
-                .RuleFor(o => o.Slope, f => f.Random.Number(55, 155))
-                .Generate();
+            var course = GetFakeCourse();
 
-            _courseRepository.Setup(x => x.GetById(course.Id)).ReturnsAsync(course);
+            _courseRepository.Setup(x => x.GetById(course.CourseID)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             //Act
-            var result = await controller.Get(Guid.Parse(course.Id));
+            var result = await controller.Get(Guid.Parse(course.CourseID));
             //Assert
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<OkObjectResult>();
@@ -109,19 +96,12 @@ namespace ApiTests.Courses
         public async Task CourseController_GetCourseBadCourseId_ReturnsNoFound()
         {
             //Arrange 
-            var course = new Faker<Course>()
-                //Ensure all properties have rules. By default, StrictMode is false
-                //Set a global policy by using Faker.DefaultStrictMode if you prefer.
-                .StrictMode(true)
-                .RuleFor(c => c.Id, Guid.NewGuid().ToString())
-                .RuleFor(o => o.Name, f => f.Company.CompanyName())
-                .RuleFor(o => o.Slope, f => f.Random.Number(55, 155))
-                .Generate();
+            var course = GetFakeCourse();
 
-            _courseRepository.Setup(x => x.GetById(course.Id)).Returns(Task.FromResult<Course>(null));
+            _courseRepository.Setup(x => x.GetById(course.CourseID)).Returns(Task.FromResult<Course>(null));
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             //Act
-            var result = await controller.Get(Guid.Parse(course.Id));
+            var result = await controller.Get(Guid.Parse(course.CourseID));
             //Assert
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<NotFoundObjectResult>();
@@ -147,15 +127,7 @@ namespace ApiTests.Courses
         public async Task CourseController_PostCourse_Returns201()
         {
             //Arrange
-            var course = new Faker<Course>()
-                //Ensure all properties have rules. By default, StrictMode is false
-                //Set a global policy by using Faker.DefaultStrictMode if you prefer.
-                .StrictMode(true)
-                .RuleFor(c => c.Id, Guid.NewGuid().ToString())
-                .RuleFor(o => o.Name, f => f.Company.CompanyName())
-                .RuleFor(o => o.Slope, f => f.Random.Number(55, 155))
-                .Generate();
-
+            Course course = GetFakeCourse();
             _courseRepository.Setup(x => x.Add(course)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             controller.ControllerContext = new ControllerContext();
@@ -167,6 +139,40 @@ namespace ApiTests.Courses
             ((CreatedAtRouteResult)result).StatusCode.Should().Be(201);
             ((CreatedAtRouteResult)result).Value.Should().BeOfType<Course>();
             ((CreatedAtRouteResult)result).Value.Should().BeEquivalentTo(course);
+        }
+
+        private static List<Course>? GetFakeCourses(int numberOfCourses)
+        {
+            var courses = new Faker<Course>()
+                //Ensure all properties have rules. By default, StrictMode is false
+                //Set a global policy by using Faker.DefaultStrictMode if you prefer.
+                .StrictMode(true)
+                .RuleFor(c => c.CourseID, Guid.NewGuid().ToString())
+                .RuleFor(c => c.PartitionKey, "Course")
+                .RuleFor(c => c.Name, f => f.Company.CompanyName())
+                .RuleFor(c => c.Slope, f => f.Random.Number(55, 155))
+                .RuleFor(c => c.ETag, Guid.NewGuid().ToString())
+                .RuleFor(c => c.City, f => f.Address.City())
+                .RuleFor(c => c.State, f =>  f.Address.StateAbbr())
+                .Generate(numberOfCourses);
+            return courses;
+        }
+
+        private static Course GetFakeCourse()
+        {
+            var course = new Faker<Course>()
+                //Ensure all properties have rules. By default, StrictMode is false
+                //Set a global policy by using Faker.DefaultStrictMode if you prefer.
+                .StrictMode(true)
+                .RuleFor(c => c.CourseID, Guid.NewGuid().ToString())
+                .RuleFor(c => c.PartitionKey, "Course")
+                .RuleFor(c => c.Name, f => f.Company.CompanyName())
+                .RuleFor(c => c.Slope, f => f.Random.Number(55, 155))
+                .RuleFor(c => c.ETag, Guid.NewGuid().ToString())
+                .RuleFor(c => c.City, f => f.Address.City())
+                .RuleFor(c => c.State, f => f.Address.StateAbbr())
+                .Generate();
+            return course;
         }
     }
 }

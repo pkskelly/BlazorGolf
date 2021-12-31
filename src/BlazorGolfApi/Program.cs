@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
-using Microsoft.Extensions.Configuration;
 using FluentValidation;
-using BlazorGolfApi;
+using BlazorGolfApi.Services;
+using Microsoft.EntityFrameworkCore;
+using BlazorGolfApi.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+builder.Services.AddScoped<IRepository<Course>, CourseRespository>();
 
 builder.Services.AddCors(options =>
 {
@@ -23,6 +26,12 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddDbContext<ApplicationContext>(options => {
+                    options.EnableSensitiveDataLogging()
+                    .UseCosmos(builder.Configuration.GetConnectionString("DefaultConnection"), nameof(ApplicationContext));
+
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
