@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using FluentValidation;
 using FluentValidation.TestHelper;
-using BlazorGolfApi.Entities;
+using BlazorGolf.Api.Entities;
 using System;
 using BlazorGolf.Core.Models;
 

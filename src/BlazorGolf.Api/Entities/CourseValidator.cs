@@ -2,7 +2,7 @@ using FluentValidation;
 using BlazorGolf.Core.Extensions;
 using BlazorGolf.Core.Models;
 
-namespace BlazorGolfApi.Entities
+namespace BlazorGolf.Api.Entities
 {
     public class CourseValidator : AbstractValidator<Course>
     {

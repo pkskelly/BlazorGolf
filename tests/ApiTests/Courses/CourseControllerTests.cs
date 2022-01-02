@@ -2,11 +2,11 @@ using NUnit.Framework;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
 using FluentAssertions;
-using BlazorGolfApi.Entities;
+using BlazorGolf.Api.Entities;
 using BlazorGolf.Core.Models;
 using Moq;
-using BlazorGolfApi.Services;
-using BlazorGolfApi.Controllers;
+using BlazorGolf.Api.Services;
+using BlazorGolf.Api.Controllers;
 using Microsoft.Extensions.Logging;
 using System;
 using Bogus;
@@ -45,6 +45,7 @@ namespace ApiTests.Courses
         [Test]
         public void CourseContoller_NullRepository_ShouldThrowArgumentNullException()
         {
+            
             Action act = () => new CoursesController(_validator, null, _logger.Object);
             act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("repository");
         }

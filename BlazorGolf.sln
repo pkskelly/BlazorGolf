@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DB1A9725-FA8D-4A1C-925B-77DEF35C0D35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorGolfApi", "src\BlazorGolfApi\BlazorGolfApi.csproj", "{2C4B8643-58D7-4930-951F-281AFCC749C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorGolf.Api", "src\BlazorGolf.Api\BlazorGolf.Api.csproj", "{2C4B8643-58D7-4930-951F-281AFCC749C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorGolfClient", "src\BlazorGolfClient\BlazorGolfClient.csproj", "{A9F0158C-679E-4F21-8BCB-C96394BFA85A}"
 EndProject

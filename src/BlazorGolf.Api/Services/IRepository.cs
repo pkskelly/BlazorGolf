@@ -1,6 +1,6 @@
-using BlazorGolfApi.Entities;
+using BlazorGolf.Api.Entities;
 
-namespace BlazorGolfApi.Services
+namespace BlazorGolf.Api.Services
 {
     public interface IRepository<T>
     {
