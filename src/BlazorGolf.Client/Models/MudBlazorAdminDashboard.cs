@@ -1,6 +1,6 @@
 ﻿using MudBlazor;
 
-namespace BlazorGolfClient.Shared
+namespace BlazorGolf.Client.Shared
 {
     public class MudBlazorAdminDashboard : MudTheme
     {

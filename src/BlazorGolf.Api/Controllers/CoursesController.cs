@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using BlazorGolfApi.Entities;
+using BlazorGolf.Api.Entities;
 using FluentValidation;
-using BlazorGolfApi.Services;
+using BlazorGolf.Api.Services;
 using Ardalis.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorGolfApi.Controllers
+namespace BlazorGolf.Api.Controllers
 {
     [ApiController]
     [Route("api/courses")]

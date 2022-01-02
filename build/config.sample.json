@@ -4,6 +4,6 @@
     "swaAppName": "blazorgolf-swa",
     "repository" : "https://github.com/your-github-username/BlazorGolf" , 
     "branch": "main",
-    "appLocation": "/src/BlazorGolfClient",
+    "appLocation": "/src/BlazorGolf.Client",
     "outputLocation": "/wwwroot"
 }

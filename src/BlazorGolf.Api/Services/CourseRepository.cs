@@ -1,7 +1,7 @@
-using BlazorGolfApi.Entities;
+using BlazorGolf.Api.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorGolfApi.Services
+namespace BlazorGolf.Api.Services
 {
     public class CourseRespository : IRepository<Course>
     {

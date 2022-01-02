@@ -1,6 +1,6 @@
 using BlazorGolf.Core.Models;
 
-namespace BlazorGolfApi.Entities
+namespace BlazorGolf.Api.Entities
 {
     public class Course
     {

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using FluentValidation;
-using BlazorGolfApi.Services;
+using BlazorGolf.Api.Services;
 using Microsoft.EntityFrameworkCore;
-using BlazorGolfApi.Entities;
+using BlazorGolf.Api.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
