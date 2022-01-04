@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using BlazorGolf.Api.Entities;
+using BlazorGolf.Core.Models;
 using FluentValidation;
 using BlazorGolf.Api.Services;
 using Ardalis.GuardClauses;
 using Microsoft.EntityFrameworkCore;
-
 namespace BlazorGolf.Api.Controllers
 {
     [ApiController]
@@ -69,14 +68,14 @@ namespace BlazorGolf.Api.Controllers
         public async Task<IActionResult> Post([FromBody] Course course)
         {
 
-            _logger.LogInformation($"CreateCourse called with id: {course.CourseID}");
+            _logger.LogInformation($"CreateCourse called with id: {course.CourseId}");
             var result = _courseValidator.Validate(course);
             try
             {
                 if (result.IsValid)
                 {
                     await _repository.Add(course);
-                    return CreatedAtRoute("GetCourse", new { id = course.CourseID }, course);
+                    return CreatedAtRoute("GetCourse", new { id = course.CourseId }, course);
                 }
                 else
                 {
@@ -88,7 +87,7 @@ namespace BlazorGolf.Api.Controllers
                 return BadRequest(
                     new
                     {
-                        Error = $"Course with id {course.CourseID} already exists"
+                        Error = $"Course with id {course.CourseId} already exists"
                     }
                 );
             }

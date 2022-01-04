@@ -13,6 +13,9 @@
 |**/courses** | gets all courses | creates|updates|deletes|  |
 |**/courses/{id}**  | gets a course by id| crates|updates|deletes| Should contain a link back to parent club|
 |**/courses/{id}/rounds**  | gets rounds for a course by id| ||| Should contain a link back to parent club, should contain links to players by id|
+|**/courses/{id}/tees** | gets the Tees for a given course | creates a new Tee |||Only gets and posts are allowed |
+|**/courses/{id}/tees/{id}** | gets the Tee by Id | nothing ||Deletes a Tee by Id|Only gets and deletes are allowed |
+
 |**/players** | gets | creates|updates|deletes| |
 |**/players/{id}** | gets a player by id | creates|updates|deletes| |
 |**/players/{id}/rounds** | gets | creates|updates|deletes| |

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\BlazorGolf.Api\BlazorGolf.Api.csproj" />
+    <ProjectReference Include="..\..\src\BlazorGolf.Core\BlazorGolf.Core.csproj" />
   </ItemGroup>
 
 </Project>

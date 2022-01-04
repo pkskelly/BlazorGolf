@@ -1,4 +1,4 @@
-using BlazorGolf.Api.Entities;
+using BlazorGolf.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorGolf.Api.Services
@@ -10,8 +10,8 @@ namespace BlazorGolf.Api.Services
         public CourseRespository(ApplicationContext applcationContext)
         {
             _context = applcationContext;
-            // _context.Database.EnsureCreated();
-            // _context.Database.EnsureCreated();
+            _context.Database.EnsureCreated();
+            _context.Database.EnsureCreated();
         }
 
         public async Task<Course> Add(Course course)
@@ -28,12 +28,12 @@ namespace BlazorGolf.Api.Services
 
         public async Task<Course> GetById(string id)
         {
-            return await _context.Courses.SingleOrDefaultAsync<Course>(c => c.CourseID == id);
+            return await _context.Courses.SingleOrDefaultAsync<Course>(c => c.CourseId == id);
         }
 
         public async Task Remove(string id)
         {
-            var course = await _context.Courses.SingleOrDefaultAsync<Course>(c => c.CourseID == id);
+            var course = await _context.Courses.SingleOrDefaultAsync<Course>(c => c.CourseId == id);
             _context.Remove<Course>(course);
              await _context.SaveChangesAsync();
              return;

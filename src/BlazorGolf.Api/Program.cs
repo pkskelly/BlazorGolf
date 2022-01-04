@@ -3,14 +3,14 @@ using Microsoft.Identity.Web;
 using FluentValidation;
 using BlazorGolf.Api.Services;
 using Microsoft.EntityFrameworkCore;
-using BlazorGolf.Api.Entities;
+using BlazorGolf.Core.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddValidatorsFromAssemblyContaining<CourseValidator>();
 
 builder.Services.AddScoped<IRepository<Course>, CourseRespository>();
 
