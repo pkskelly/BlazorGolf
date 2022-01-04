@@ -1,5 +1,3 @@
-using BlazorGolf.Api.Entities;
-
 namespace BlazorGolf.Api.Services
 {
     public interface IRepository<T>

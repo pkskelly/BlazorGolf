@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using FluentValidation;
 using FluentValidation.TestHelper;
-using BlazorGolf.Api.Entities;
 using System;
 using BlazorGolf.Core.Models;
 
@@ -11,59 +10,49 @@ namespace ApiTests.Courses
     public class CourseEntityTests
     {
 
-        private CourseValidator? _validator;
+        private CourseValidator? _courseValidator;
+        private TeeValidator? _teeValidator;
+
 
         [SetUp]
         public void Setup()
         {
-            _validator = new CourseValidator();
+            _courseValidator = new CourseValidator();
+            _teeValidator = new TeeValidator();
         }
 
         [Test]
         public void Course_DefaultShouldHave_NewGuid()
         {
-            var course = new Course();            
-            var result = _validator.TestValidate(course);
-            result.ShouldNotHaveValidationErrorFor(x => x.CourseID);
-            Assert.AreEqual(36, course.CourseID.Length);
+            var course = new Course();
+            var result = _courseValidator.TestValidate(course);
+            result.ShouldNotHaveValidationErrorFor(x => x.CourseId);
+            Assert.AreEqual(36, course.CourseId.Length);
         }
 
         [Test]
         public void Course_ShouldHaveError_NonGuid()
         {
             var course = new Course();
-            course.CourseID = "this is not a guid";
-            var result = _validator.TestValidate(course);
+            course.CourseId = "this is not a guid";
+            var result = _courseValidator.TestValidate(course);
 
-            result.ShouldHaveValidationErrorFor(x => x.CourseID);
+            result.ShouldHaveValidationErrorFor(x => x.CourseId);
         }
 
         [Test]
-        public void Course_DefaultShouldNotHave_EmptyorNulltName()
+        public void Course_DefaultShouldNotHave_EmptyorNullName()
         {
             var course = new Course();
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.Name);
-        }
-
-        [Test]
-        public void Course_ShouldHave_DefaultSlope()
-        {
-            var course = new Course();
-            course.Slope = 54;
-            course.Name = "Chateau Elan - Woodlands";
-            var result = _validator.TestValidate(course);
-            result.ShouldHaveValidationErrorFor(x => x.Slope);
         }
 
         [Test]
         public void Course_ShouldHave_DefaultPartitionKey()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldNotHaveValidationErrorFor(x => x.PartitionKey);
         }
 
@@ -71,11 +60,8 @@ namespace ApiTests.Courses
         public void Course_ShouldThrow_MissingPartitionKey()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
             course.PartitionKey = "";
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.PartitionKey);
         }
 
@@ -83,11 +69,8 @@ namespace ApiTests.Courses
         public void Course_ShouldThrow_NullPartitionKey()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
             course.PartitionKey = null;
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.PartitionKey);
         }
 
@@ -95,11 +78,8 @@ namespace ApiTests.Courses
         public void Course_WithEmptyCity_Fails()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
             course.City = "";
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.City);
         }
 
@@ -107,10 +87,7 @@ namespace ApiTests.Courses
         public void Course_WithNullCity_Fails()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.City);
         }
 
@@ -118,11 +95,8 @@ namespace ApiTests.Courses
         public void Course_WithLongCity_Fails()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
             course.City = "This is a very long city name that is more than 50 characters long";
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.City);
         }
 
@@ -130,11 +104,8 @@ namespace ApiTests.Courses
         public void Course_WithShortCity_Fails()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
             course.City = "ci";
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.City);
         }
 
@@ -142,11 +113,8 @@ namespace ApiTests.Courses
         public void Course_WithCity_IsValid()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
             course.City = "London";            
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldNotHaveValidationErrorFor(x => x.City);
         }
 
@@ -154,12 +122,8 @@ namespace ApiTests.Courses
         public void Course_WithStateAbbreviation_Succeeds()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
-            course.City = "Birmingham";
             course.State = "AL";
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldNotHaveValidationErrorFor(x => x.State);
         }
 
@@ -167,12 +131,198 @@ namespace ApiTests.Courses
         public void Course_WithMissingStateAbbreviation_Fails()
         {
             var course = new Course();
-            course.Slope = 55;
-            course.Name = "Chateau Elan - Woodlands";
-            course.ETag = Guid.NewGuid().ToString();
-            course.City = "Birmingham";
-            var result = _validator.TestValidate(course);
+            var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.State);
+        }
+
+        [Test]
+        public void Tee_DefaultNewObject_Fails()
+        {
+            var tee = new Tee();
+            var result = _teeValidator.TestValidate(tee);
+            Assert.IsFalse(result.IsValid);
+            Assert.GreaterOrEqual(10, result.Errors.Count);
+        }
+
+        [Test]
+        public void Tee_DefaultShouldHave_NewGuid()
+        {
+            var tee = new Tee();
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldNotHaveValidationErrorFor(x => x.TeeId);
+            Assert.AreEqual(36, tee.TeeId.Length);
+        }
+
+        [Test]
+        public void Tee_ShouldHaveError_NonGuid()
+        {
+            var tee = new Tee();
+            tee.TeeId = "this is not a guid";
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.TeeId);
+        }
+
+        [Test]
+        public void Tee_NameGreaterThan100_Fails()
+        {
+            var tee = new Tee();
+            tee.Name = "This is a very long name that is more than 100 characters long. This is a very long name that is more than 100 characters long. This is a very long name that is more than 100 characters long.";
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.Name);
+        }
+
+        [Test]
+        public void Tee_NameLessThan4_Fails()
+        {
+            var tee = new Tee();
+            tee.Name = "Thi";
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.Name);
+        }
+
+        [Test]
+        public void Tee_ParLessThan59_Fails()
+        {
+            var tee = new Tee();
+            tee.Par = 58;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.Par);
+        }
+
+        [Test]
+        public void Tee_ParGreaterThan75_Fails()
+        {
+            var tee = new Tee();
+            tee.Par = 76;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.Par);
+        }
+
+        [Test]
+        public void Tee_SlopeGreaterThan155_Fails()
+        {
+            var tee = new Tee();
+            tee.Slope = 156;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.Slope);
+        }
+
+        [Test]
+        public void Tee_SlopeLessThan55_Fails()
+        {
+            var tee = new Tee();
+            tee.Slope = 54;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.Slope);
+        }
+
+        [Test]
+        public void Tee_RatingLessThan59_Fails()
+        {
+            var tee = new Tee();
+            tee.Rating = 58.9;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.Rating);
+        }
+
+        [Test]
+        public void Tee_RatingGreaterThan130_Fails()
+        {
+            var tee = new Tee();
+            tee.Rating = 130.1;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.Rating);
+        }
+
+        [Test]
+        public void Tee_BogeyRatingLessThan59_Fails()
+        {
+            var tee = new Tee();
+            tee.BogeyRating = 58.9;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.BogeyRating);
+        }
+
+        [Test]
+        public void Tee_BogeyRatingGreaterThan130_Fails()
+        {
+            var tee = new Tee();
+            tee.BogeyRating = 130.1;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.BogeyRating);
+        }
+
+        [Test]
+        public void Tee_FrontNineRatingLessThan59_Fails()
+        {
+            var tee = new Tee();
+            tee.Name = "Sample passing name";
+            tee.FrontNineRating = 58.9;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.FrontNineRating);
+        }
+
+        [Test]
+        public void Tee_FrontNineRatingGreaterThan130_Fails()
+        {
+            var tee = new Tee();
+            tee.FrontNineRating = 130.1;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.FrontNineRating);
+        }
+
+        [Test]
+        public void Tee_FrontNineSlopeGreaterThan155_Fails()
+        {
+            var tee = new Tee();
+            tee.FrontNineSlope = 156;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.FrontNineSlope);
+        }
+
+        [Test]
+        public void Tee_FrontNineSlopeLessThan55_Fails()
+        {
+            var tee = new Tee();
+            tee.FrontNineSlope = 54;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.FrontNineSlope);
+        }
+
+        [Test]
+        public void Tee_BackNineRatingLessThan59_Fails()
+        {
+            var tee = new Tee();
+            tee.BackNineRating = 58.9;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.BackNineRating);
+        }
+
+        [Test]
+        public void Tee_BackNineRatingGreaterThan130_Fails()
+        {
+            var tee = new Tee();
+            tee.BackNineRating = 130.1;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.BackNineRating);
+        }
+
+        [Test]
+        public void Tee_BackNineSlopeGreaterThan155_Fails()
+        {
+            var tee = new Tee();
+            tee.BackNineSlope = 156;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.BackNineSlope);
+        }
+
+        [Test]
+        public void Tee_BackNineSlopeLessThan55_Fails()
+        {
+            var tee = new Tee();
+            tee.BackNineSlope = 54;
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.BackNineSlope);
         }
     }
 }

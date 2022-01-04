@@ -2,7 +2,6 @@ using NUnit.Framework;
 using Microsoft.AspNetCore.Mvc;
 using FluentValidation;
 using FluentAssertions;
-using BlazorGolf.Api.Entities;
 using BlazorGolf.Core.Models;
 using Moq;
 using BlazorGolf.Api.Services;
@@ -13,7 +12,6 @@ using Bogus;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace ApiTests.Courses
 {
@@ -81,10 +79,10 @@ namespace ApiTests.Courses
             //Arrange 
             var course = GetFakeCourse();
 
-            _courseRepository.Setup(x => x.GetById(course.CourseID)).ReturnsAsync(course);
+            _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             //Act
-            var result = await controller.Get(Guid.Parse(course.CourseID));
+            var result = await controller.Get(Guid.Parse(course.CourseId));
             //Assert
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<OkObjectResult>();
@@ -99,10 +97,10 @@ namespace ApiTests.Courses
             //Arrange 
             var course = GetFakeCourse();
 
-            _courseRepository.Setup(x => x.GetById(course.CourseID)).Returns(Task.FromResult<Course>(null));
+            _courseRepository.Setup(x => x.GetById(course.CourseId)).Returns(Task.FromResult<Course>(null));
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             //Act
-            var result = await controller.Get(Guid.Parse(course.CourseID));
+            var result = await controller.Get(Guid.Parse(course.CourseId));
             //Assert
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<NotFoundObjectResult>();
@@ -147,11 +145,10 @@ namespace ApiTests.Courses
             var courses = new Faker<Course>()
                 //Ensure all properties have rules. By default, StrictMode is false
                 //Set a global policy by using Faker.DefaultStrictMode if you prefer.
-                .StrictMode(true)
-                .RuleFor(c => c.CourseID, Guid.NewGuid().ToString())
+                //.StrictMode(true)
+                .RuleFor(c => c.CourseId, Guid.NewGuid().ToString())
                 .RuleFor(c => c.PartitionKey, "Course")
                 .RuleFor(c => c.Name, f => f.Company.CompanyName())
-                .RuleFor(c => c.Slope, f => f.Random.Number(55, 155))
                 .RuleFor(c => c.ETag, Guid.NewGuid().ToString())
                 .RuleFor(c => c.City, f => f.Address.City())
                 .RuleFor(c => c.State, f =>  f.Address.StateAbbr())
@@ -164,14 +161,42 @@ namespace ApiTests.Courses
             var course = new Faker<Course>()
                 //Ensure all properties have rules. By default, StrictMode is false
                 //Set a global policy by using Faker.DefaultStrictMode if you prefer.
-                .StrictMode(true)
-                .RuleFor(c => c.CourseID, Guid.NewGuid().ToString())
+                //.StrictMode(true)
+                .RuleFor(c => c.CourseId, Guid.NewGuid().ToString())
                 .RuleFor(c => c.PartitionKey, "Course")
                 .RuleFor(c => c.Name, f => f.Company.CompanyName())
-                .RuleFor(c => c.Slope, f => f.Random.Number(55, 155))
                 .RuleFor(c => c.ETag, Guid.NewGuid().ToString())
                 .RuleFor(c => c.City, f => f.Address.City())
                 .RuleFor(c => c.State, f => f.Address.StateAbbr())
+                .RuleFor(c => c.Tees, f => new List<Tee>()
+                {
+                    new Tee()
+                    {
+                        TeeId = Guid.NewGuid().ToString(),
+                        Name = "Blue",
+                        Par = 72,
+                        Slope = f.Random.Int(55,155),
+                        Rating = f.Random.Double(59.0, 74.0),
+                        BogeyRating  = 104.0,
+                        FrontNineRating = 34.0,
+                        FrontNineSlope = 121,
+                        BackNineRating = 36.0,
+                        BackNineSlope  = 124
+                    },
+                    new Tee()
+                    {
+                        TeeId = Guid.NewGuid().ToString(),
+                        Name = "White",
+                        Par = 72,
+                        Slope = f.Random.Int(55,155),
+                        Rating = f.Random.Double(59.0, 74.0),
+                        BogeyRating  = 104.0,
+                        FrontNineRating = 34.0,
+                        FrontNineSlope = 121,
+                        BackNineRating = 36.0,
+                        BackNineSlope  = 124
+                    }
+                })
                 .Generate();
             return course;
         }

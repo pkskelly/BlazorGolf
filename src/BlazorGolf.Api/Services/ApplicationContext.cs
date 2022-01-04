@@ -1,4 +1,4 @@
-using BlazorGolf.Api.Entities;
+using BlazorGolf.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorGolf.Api.Services
@@ -17,7 +17,7 @@ namespace BlazorGolf.Api.Services
             modelBuilder.HasDefaultContainer("Courses");
 
             modelBuilder.Entity<Course>().ToContainer("Courses");
-            modelBuilder.Entity<Course>().HasKey(c => c.CourseID);
+            modelBuilder.Entity<Course>().HasKey(c => c.CourseId);
             modelBuilder.Entity<Course>().HasPartitionKey(c => c.PartitionKey);
             modelBuilder.Entity<Course>().HasDiscriminator<string>("PartitionKey").HasValue<Course>("Course");
             modelBuilder.Entity<Course>().Property(c => c.ETag).IsETagConcurrency();
