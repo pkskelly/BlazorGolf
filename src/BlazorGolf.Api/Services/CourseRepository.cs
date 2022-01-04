@@ -10,8 +10,8 @@ namespace BlazorGolf.Api.Services
         public CourseRespository(ApplicationContext applcationContext)
         {
             _context = applcationContext;
-            _context.Database.EnsureCreated();
-            _context.Database.EnsureCreated();
+            // _context.Database.EnsureDeleted();
+             _context.Database.EnsureCreated();
         }
 
         public async Task<Course> Add(Course course)

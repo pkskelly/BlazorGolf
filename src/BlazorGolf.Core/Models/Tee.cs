@@ -2,6 +2,7 @@ namespace BlazorGolf.Core.Models
 {
     public class Tee
     {
+        public string TeeId { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; } = String.Empty;
         public int Par { get; set; } = 0;
         public int Slope { get; set; } = 0;

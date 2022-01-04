@@ -172,10 +172,24 @@ namespace ApiTests.Courses
                 {
                     new Tee()
                     {
+                        TeeId = Guid.NewGuid().ToString(),
+                        Name = "Blue",
+                        Par = 72,
+                        Slope = f.Random.Int(55,155),
+                        Rating = f.Random.Double(59.0, 74.0),
+                        BogeyRating  = 104.0,
+                        FrontNineRating = 34.0,
+                        FrontNineSlope = 121,
+                        BackNineRating = 36.0,
+                        BackNineSlope  = 124
+                    },
+                    new Tee()
+                    {
+                        TeeId = Guid.NewGuid().ToString(),
                         Name = "White",
                         Par = 72,
                         Slope = f.Random.Int(55,155),
-                        Rating = f.Random.Double(36.0, 74.0),
+                        Rating = f.Random.Double(59.0, 74.0),
                         BogeyRating  = 104.0,
                         FrontNineRating = 34.0,
                         FrontNineSlope = 121,

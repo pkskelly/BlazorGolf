@@ -145,6 +145,24 @@ namespace ApiTests.Courses
         }
 
         [Test]
+        public void Tee_DefaultShouldHave_NewGuid()
+        {
+            var tee = new Tee();
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldNotHaveValidationErrorFor(x => x.TeeId);
+            Assert.AreEqual(36, tee.TeeId.Length);
+        }
+
+        [Test]
+        public void Tee_ShouldHaveError_NonGuid()
+        {
+            var tee = new Tee();
+            tee.TeeId = "this is not a guid";
+            var result = _teeValidator.TestValidate(tee);
+            result.ShouldHaveValidationErrorFor(x => x.TeeId);
+        }
+
+        [Test]
         public void Tee_NameGreaterThan100_Fails()
         {
             var tee = new Tee();
@@ -154,10 +172,10 @@ namespace ApiTests.Courses
         }
 
         [Test]
-        public void Tee_NameLessThan5_Fails()
+        public void Tee_NameLessThan4_Fails()
         {
             var tee = new Tee();
-            tee.Name = "This";
+            tee.Name = "Thi";
             var result = _teeValidator.TestValidate(tee);
             result.ShouldHaveValidationErrorFor(x => x.Name);
         }

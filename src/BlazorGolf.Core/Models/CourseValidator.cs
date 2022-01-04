@@ -17,7 +17,9 @@ namespace BlazorGolf.Core.Models
             RuleFor(x => x.Name).NotNull().NotEmpty();
             RuleFor(x => x.City).NotNull().NotEmpty().MinimumLength(3).MaximumLength(50);
             RuleFor(x => x.State).NotNull().NotEmpty().Must(x => x.IsValidEnumMember(typeof(USStates))).WithMessage("State must be a valid 2 character state abbreviation");
-            RuleFor(x => x.Tees).NotNull().NotEmpty().Must(x => x.Count() > 0);
+            RuleFor(x => x.Tees).NotNull().NotEmpty()
+                .Must(x => x.Count() <=10).WithMessage("No more than 10 tees are allowed per course")
+                .ForEach(x => x.SetValidator(new TeeValidator()));
         }
     }
 }
