@@ -19,12 +19,22 @@
         <MudNavLink Href="pages/authentication/forgot-password" Icon="@Icons.Material.Outlined.InsertDriveFile">Forgot Password</MudNavLink>
         <MudNavLink Href="pages/authentication/reset-password" Icon="@Icons.Material.Outlined.InsertDriveFile">Reset Password</MudNavLink> *@
     </MudNavGroup>
-    <MudNavGroup Title="Error" Icon="@AlertAssignmentIcon" HideExpandIcon="true">
+    @* <MudNavGroup Title="Error" Icon="@AlertAssignmentIcon" HideExpandIcon="true">
         <MudNavLink Href="pages/error/404" Icon="@Icons.Material.Outlined.InsertDriveFile">404</MudNavLink>
     </MudNavGroup>
     <MudNavGroup Title="Utility" Icon="@Icons.Material.Outlined.Assignment" HideExpandIcon="true">
         <MudNavLink Href="pages/utility/faq" Icon="@Icons.Material.Outlined.InsertDriveFile">Faq</MudNavLink>
-    </MudNavGroup>
+    </MudNavGroup> *@
+     <AuthorizeView Roles="weather.admin">
+            <ChildContent>
+                <MudNavGroup Title="Administrators" Icon="@Icons.Material.Outlined.Assignment" HideExpandIcon="true">
+                    <MudNavLink Href="pages/utility/admin" Icon="@Icons.Material.Outlined.InsertDriveFile">Manage Courses</MudNavLink>
+                </MudNavGroup>
+            </ChildContent>
+            <NotAuthorized>
+                 <MudIconButton Icon="@Icons.Custom.Brands.MicrosoftAzure" Color="Color.Inherit" Edge="Edge.Start" Link="/authentication/login"/>
+            </NotAuthorized>
+        </AuthorizeView>
 </MudNavMenu>
 
 @code {
