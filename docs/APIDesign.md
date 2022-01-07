@@ -35,3 +35,16 @@ The BlazorGolf API should use the OData integration to enable filtering, sorting
 
 
 /admin. - root of the admin functions that might be needed 
+
+## Web API annd Not Azure Functions
+
+This was a choice early on based on my existing knowledge of Functions and wanting to learn more about Web API.
+
+
+## MediatR : To use or not to use
+
+Initally, I am building this without the overhead of MediatR, but even early on I am seeing that this may be a valuable addition. I will add an issue if this becomes something that might be valuable. 
+
+## Links and References 
+
+[Building a RESTful API with ASP.NET Core 3](https://app.pluralsight.com/library/courses/asp-dot-net-core-3-restful-api-building/table-of-contents)

@@ -22,7 +22,7 @@ namespace BlazorGolf.Client.Pages
 
         public string Message { get; set; }
 
-        public string[] Headings { get; set; } = new string[] { "Name", "City", "State" };
+        public string[] Headings { get; set; } = new string[] { "", "Name", "City", "State", "" };
 
 
         // protected AddEmployeeDialog AddEmployeeDialog { get; set; }

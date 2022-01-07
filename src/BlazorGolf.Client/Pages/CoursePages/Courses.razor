@@ -24,10 +24,14 @@ else
             @foreach (var course in @Courses)
             {
                 <tr>
-                    <td><MudIcon Icon="@Icons.Filled.SportsGolf" Title="@course.Name"/></td>
+                    <td><MudIcon Icon="@Icons.Filled.SportsGolf" Size="Size.Large" Title="@course.Name"/></td>
                     <td>@course.Name</td>
                     <td>@course.City</td>
                     <td>@course.State</td>
+                    <td>
+                        <MudChip Icon="@Icons.Filled.Create" Color="Color.Info" Size="Size.Medium" Link="/coursepages/editcourse">Edit</MudChip>
+                        <MudChip Icon="@Icons.Filled.RemoveCircle" Color="Color.Error"Size="Size.Medium" Link="/coursepages/deletecourse">Delete</MudChip>
+                    </td>
                 </tr>
             }
         </tbody>
