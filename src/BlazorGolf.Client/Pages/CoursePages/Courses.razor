@@ -1,0 +1,39 @@
+@page "/coursepages/courses"
+@inherits CourseBase
+
+<h1 class="page-title">Courses</h1>
+
+<p>@Message</p>
+
+@if (Courses == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MudSimpleTable Style="overflow-x: auto;">
+        <thead>
+            <tr>
+                @foreach (var h in @Headings)
+                {
+                    <th>@h</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var course in @Courses)
+            {
+                <tr>
+                    <td><MudIcon Icon="@Icons.Filled.SportsGolf" Title="@course.Name"/></td>
+                    <td>@course.Name</td>
+                    <td>@course.City</td>
+                    <td>@course.State</td>
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+}
+
+@* <button @onclick="QuickAddEmployee" class="btn btn-dark table-btn quick-add-btn">&nbsp;&nbsp;+&nbsp;&nbsp;</button>
+
+<AddEmployeeDialog @ref="AddEmployeeDialog" CloseEventCallback="@AddEmployeeDialog_OnDialogClose"></AddEmployeeDialog> *@

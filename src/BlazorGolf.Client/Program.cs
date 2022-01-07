@@ -3,13 +3,25 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using BlazorGolf.Client;
 using BlazorGolf.Client.Authentication;
+using BlazorGolf.Client.Services;
 using MudBlazor.Services;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+var blazorGolfApiUri = new Uri("https://localhost:7019/");
+void RegisterTypedClient<TClient, TImplementation>(Uri apiBaseUrl) where TClient : class where TImplementation : class, TClient
+{
+    builder.Services.AddHttpClient<TClient, TImplementation>(client =>
+    {
+        client.BaseAddress = apiBaseUrl;
+    });
+}
+// Register typed HTTP services
+RegisterTypedClient<ICourseService, CourseService>(blazorGolfApiUri);
 
 builder.Services.AddMsalAuthentication<RemoteAuthenticationState, CustomUserAccount>(options =>
 {
