@@ -1,4 +1,4 @@
-name: .NET
+name: Build and Deploy Blazor Golf API
 
 on:
   workflow_dispatch:
