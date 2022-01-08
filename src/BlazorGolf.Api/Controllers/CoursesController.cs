@@ -8,9 +8,10 @@ using Ardalis.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 namespace BlazorGolf.Api.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api/courses")]
-    [EnableCors("AllowEveryone")]
+    [EnableCors("AllowEveryone")]    
     public class CoursesController : ControllerBase
     {
 
@@ -48,7 +49,7 @@ namespace BlazorGolf.Api.Controllers
         {
             _logger.LogInformation($"GetCourses called with id: {id.ToString()}");
             var course = await _repository.GetById(id.ToString());
-            if (null == course)
+            if (course == null)
             {
                 _logger.LogWarning($"GetCourses called with invalid id: {id.ToString()}");
                 return NotFound(
@@ -94,6 +95,7 @@ namespace BlazorGolf.Api.Controllers
         }
 
         // DELETE api/courses/6394652d-b853-408a-a2aa-b3b59d8abf82
+        [Authorize(Roles = "weather.admin")]
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(Guid id)

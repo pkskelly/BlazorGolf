@@ -19,3 +19,12 @@ Created an Azure SWA app and then configured for the following:
 Deploy was successful and could access app from Azure SWA endpoint.
 
 
+## Links and References 
+
+[ASP.NET Core Blazor routing and navigation](https://docs.microsoft.com/en-us/aspnet/core/blazor/fundamentals/routing?view=aspnetcore-6.0)
+
+[Build Web Applications with Blazor](https://docs.microsoft.com/en-us/learn/modules/use-pages-routing-layouts-control-blazor-navigation/1-introduction)
+
+[Designing and Building Enterprise Blazor Applications](https://app.pluralsight.com/library/courses/designing-building-enterprise-blazor-applications/table-of-contents)
+
+[Alex Wolf Blazor Enterprise Repo](https://github.com/alex-wolf-ps/blazor-enterprise)
