@@ -2,7 +2,7 @@
 
 ## Data Modeling
 
-Part of this project was to learn a bit about using CosmosDB and the assocaited [Data Modeling](https://docs.microsoft.com/en-us/azure/cosmos-db/sql/modeling-data) changes from SQL databases vs. document databases.  Using CosmosDB is an exploration and will likely have some twists as I figure out what should be stored as a single document, and what should reference links as needed.    
+Part of this project was to learn a bit about using CosmosDB and the associated [Data Modeling](https://docs.microsoft.com/en-us/azure/cosmos-db/sql/modeling-data) changes from SQL databases vs. document databases.  Using CosmosDB is an exploration and will likely have some twists as I figure out what should be stored as a single document, and what should reference links as needed.    
 
 ## Cosmos DB Emulator
 
