@@ -8,6 +8,12 @@ on:
     paths:
       - 'src/BlazorGolf.Api/**'
 
+env:
+  CONFIGURATION: Debug 
+  API_PROJECT_PATH: './src/BlazorGolf.Api'   
+  API_TESTS_PATH: './tests/ApiTests'   
+  API_OUTPUT_PATH: './dist'      
+
 jobs:
   build:
 
@@ -24,7 +30,16 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore
+      shell: bash
+      run: |
+        pushd './${{ env.API_PROJECT_PATH }}'
+        dotnet build --configuration ${{ env.CONFIGURATION }}
+        dotnet publish -c ${{ env.CONFIGURATION }} -o ${{env.API_OUTPUT_PATH}} 
+        popd      
       
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      shell: bash
+      run: |
+        pushd './${{ env.API_TESTS_PATH }}'
+        dotnet test --configuration ${{ env.CONFIGURATION }}      
+        popd
