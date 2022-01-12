@@ -1,9 +1,24 @@
 {
+    "configuration": "Debug",
     "location": "EastUs2",
     "groupName": "rg-blazorgolf-dev",
-    "swaAppName": "blazorgolf-swa",
-    "repository" : "https://github.com/your-github-username/BlazorGolf" , 
+    "repository" : "https://github.com/pkskelly/BlazorGolf",
     "branch": "main",
-    "appLocation": "/src/BlazorGolf.Client",
-    "outputLocation": "/wwwroot"
+    "cosmosDb": {
+        "groupName":"rg-blazorgolf-data",
+        "dbAccount":"blazorgolf-cosmosdb"
+    },
+    "apiWebApp": {
+        "apiAppPlan": "svcplan-api-blazorgolf",
+        "apiAppPlanSku": "FREE",
+        "apiAppName": "app-api-blazorgolf",
+        "apiAppSettingsFile": "appconfig.settings.json",
+        "apiOutputLocation": "/dist",
+        "apiAppSecretName": "DEV_AZURE_WEBAPI_PUBLISH_PROFILE"
+    },
+    "staticWebApp": {
+        "swaAppName": "app-swa-blazorgolf",
+        "wasmAppLocation": "/src/BlazorGolf.Client",
+        "wasmOutputLocation": "/wwwroot"
+    }
 }
