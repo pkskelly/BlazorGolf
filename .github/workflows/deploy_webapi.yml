@@ -10,6 +10,7 @@ on:
 
 env:
   CONFIGURATION: Debug 
+  API_APP_NAME: app-api-blazorgolf
   API_PROJECT_PATH: './src/BlazorGolf.Api'   
   API_TESTS_PATH: './tests/ApiTests'   
   API_OUTPUT_PATH: './dist'      
@@ -42,23 +43,25 @@ jobs:
         dotnet test --configuration ${{ env.CONFIGURATION }}      
         popd
 
-  deploy_api:
-    runs-on: ubuntu-latest
-    needs: build_api
+#   deploy_api:
+#     runs-on: ubuntu-latest
+#     needs: build_api
 
-    steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v2
-      with:
-        path: ${{env.API_OUTPUT_PATH}} 
+#     steps:
+#     - name: Download artifacts
+#       uses: actions/download-artifact@v2
+#       with:
+#         path: ${{env.API_OUTPUT_PATH}} 
     
-    - name: List Artifacts
-      shell: bash
-      run: |
-        tree -L 2
+#     - name: List Artifacts
+#       shell: bash
+#       run: |
+#         tree -L 2
         
     - name: Deploy to Azure Web App
       uses: Azure/webapps-deploy@v2
       with:
-        app-name: 'blazor-golf-api'
+        app-name: ${{env.API_APP_NAME}}
+        package: ${{env.API_OUTPUT_PATH}}
         publish-profile: '${{secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE}}'
+        
