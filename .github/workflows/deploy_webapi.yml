@@ -10,67 +10,122 @@ on:
 
 env:
   CONFIGURATION: Debug 
-  API_APP_NAME: app-api-blazorgolf
+  DOTNET_VERSION: '6'
+  AZURE_WEBAPP_NAME: app-api-blazorgolf
   API_PROJECT_PATH: './src/BlazorGolf.Api'   
   API_TESTS_PATH: './tests/ApiTests'   
-  API_OUTPUT_PATH: './dist'      
+  API_PACKAGE_PATH: './dist'      
 
 jobs:
-  build_api:
+  build:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
- 
-    - name: Restore dependencies
-      run: dotnet restore
 
-    - name: Build
-      shell: bash
-      run: |
-        pushd './${{ env.API_PROJECT_PATH }}'
-        dotnet build --configuration ${{ env.CONFIGURATION }}
-        dotnet publish -c ${{ env.CONFIGURATION }} -o ${{env.API_OUTPUT_PATH}} 
-        popd      
+    steps:
+      - uses: actions/checkout@v2
       
-    - name: Run Tests
-      shell: bash
-      run: |
-        pushd './${{ env.API_TESTS_PATH }}'
-        dotnet test --configuration ${{ env.CONFIGURATION }}      
-        popd
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
-      with:
-        name: api-app
-        path: ${{env.API_OUTPUT_PATH}} 
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
-  deploy_api:
+      - name: Build with dotnet
+        run: dotnet build --configuration ${{ env.CONFIGURUATION }}
+
+      - name: dotnet publish
+        run: dotnet publish -c ${{ env.CONFIGURUATION }} -o ${{env.API_PACKAGE_PATH}}
+        
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: .net-app
+          path: ${{env.API_PACKAGE_PATH}}
+
+  deploy:
     runs-on: ubuntu-latest
-    needs: build_api
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v2
-      with:
-        path: ${{env.API_OUTPUT_PATH}} 
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: .net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE }}
+          package: ${{ env.API_PACKAGE_PATH }}
+
+
+# jobs:
+#   build_api:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - name: Setup .NET
+#       uses: actions/setup-dotnet@v1
+#       with:
+#         dotnet-version: 6.0.x
+ 
+#     - name: Restore dependencies
+#       run: dotnet restore
+
+#     - name: Build
+#       shell: bash
+#       run: |
+#         pushd './${{ env.API_PROJECT_PATH }}'
+#         dotnet build --configuration ${{ env.CONFIGURATION }}
+#         dotnet publish -c ${{ env.CONFIGURATION }} -o ${{env.API_OUTPUT_PATH}} 
+#         popd      
+      
+#     - name: Run Tests
+#       shell: bash
+#       run: |
+#         pushd './${{ env.API_TESTS_PATH }}'
+#         dotnet test --configuration ${{ env.CONFIGURATION }}      
+#         popd
+
+#     - name: Upload artifact for deployment job
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: api-app
+#         path: ${{env.API_OUTPUT_PATH}} 
+
+#   deploy_api:
+#     runs-on: ubuntu-latest
+#     needs: build_api
+
+#     steps:
+#     - name: Download artifacts
+#       uses: actions/download-artifact@v2
+#       with:
+#         path: ${{env.API_OUTPUT_PATH}} 
     
-    - name: List Artifacts
-      shell: bash
-      run: |
-        pwd
-        pushd ${{env.API_OUTPUT_PATH}} 
-        ls -l
-        popd
+#     - name: List Artifacts
+#       shell: bash
+#       run: |
+#         pwd
+#         pushd ${{env.API_OUTPUT_PATH}} 
+#         ls -l
+#         popd
         
-    - name: Deploy to Azure Web App
-      uses: Azure/webapps-deploy@v2
-      with:
-        app-name: ${{env.API_APP_NAME}}
-        package: ${{env.API_OUTPUT_PATH}}
-        publish-profile: '${{secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE}}'
+#     - name: Deploy to Azure Web App
+#       uses: Azure/webapps-deploy@v2
+#       with:
+#         app-name: ${{env.API_APP_NAME}}
+#         package: ${{env.API_OUTPUT_PATH}}
+#         publish-profile: '${{secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE}}'
         
