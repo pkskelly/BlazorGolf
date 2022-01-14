@@ -53,7 +53,7 @@ jobs:
         name : 'dist'
 
     - name: Deploy to Azure Web App
-      uses: actions/webapps-deploy@v2
+      uses: Azure/webapps-deploy@v2
       with:
         app-name: 'blazor-golf-api'
         publish-profile: '${{ secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE }}'
