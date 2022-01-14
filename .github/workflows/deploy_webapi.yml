@@ -50,7 +50,7 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@v2
       with:
-        name : 'dist'
+        path: ${{env.API_OUTPUT_PATH}} 
 
     - name: Deploy to Azure Web App
       uses: Azure/webapps-deploy@v2
