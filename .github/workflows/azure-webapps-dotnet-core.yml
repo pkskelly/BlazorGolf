@@ -76,8 +76,8 @@ jobs:
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
-        # with:
-        #   name: api-app
+        with:
+          name: ${{env.API_PACKAGE_NAME}}
 
       - name: List package path contents
         shell: bash
