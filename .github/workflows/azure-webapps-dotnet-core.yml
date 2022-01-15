@@ -56,8 +56,8 @@ jobs:
 
       - name: Build with dotnet
         run: |
-          pushd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          dotnet build --configuration Debug
+          pushd ${{ env.AZURE_WEBAPP_SOURCE_PATH }}
+          dotnet build --configuration ${{ env.CONFIGURATION }}
           dotnet publish ${{env.AZURE_WEBAPP_SOURCE_PATH}} -c ${{env.CONFIGURATION}}  -o ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
           popd
 
