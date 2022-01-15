@@ -81,7 +81,7 @@ jobs:
       - name: List package path contents
         shell: bash
         run: |
-          ls -l
+          ls -ld $PWD/*
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
