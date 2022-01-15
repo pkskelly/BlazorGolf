@@ -36,12 +36,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Build API project
-        run: dotnet build --configuration ${{ env.CONFIGURATION }}
+      - name: Build and Publish API Project
+        shell: bash
+        run: |
+          pushd './${{ env.API_PROJECT_PATH }}'
+          dotnet build --configuration ${{ env.CONFIGURATION }}
+          dotnet publish -c ${{ env.CONFIGURATION }} -o ${{env.API_OUTPUT_PATH}} 
+          popd     
 
-      - name: Publish API project
-        run: dotnet publish -c ${{ env.CONFIGURATION }} -o ${{env.API_PACKAGE_PATH}}
-      
       - name: List package path contents
         shell: bash
         run: |
@@ -85,7 +87,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          package: ${{ env.API_PACKAGE_PATH }}\
+          package: ${{ env.API_PACKAGE_PATH }}
           publish-profile: ${{ secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE }}
 
 
