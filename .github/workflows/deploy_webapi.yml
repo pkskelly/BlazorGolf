@@ -11,10 +11,10 @@ on:
 env:
   CONFIGURATION: Debug 
   DOTNET_VERSION: 6.0.x
-  AZURE_WEBAPP_NAME: app-api-blazorgolf
-  API_PROJECT_PATH: './src/BlazorGolf.Api'   
+  AZURE_WEBAPP_NAME: 'app-api-blazorgolf'
+  API_PACKAGE_PATH: './src/BlazorGolf.Api'   
   API_TESTS_PATH: './tests/ApiTests'   
-  API_PACKAGE_PATH: './dist'      
+  API_OUTPUT_PATH: './api'      
 
 jobs:
   build:
@@ -36,38 +36,57 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Build with dotnet
+      - name: Build API project
         run: dotnet build --configuration ${{ env.CONFIGURATION }}
 
-      - name: dotnet publish
+      - name: Publish API project
         run: dotnet publish -c ${{ env.CONFIGURATION }} -o ${{env.API_PACKAGE_PATH}}
+      
+      - name: List package path contents
+        shell: bash
+        run: |
+            pushd './${{ env.API_TESTS_PATH }}'
+            ls -l
+            popd
         
-      - name: Upload artifact for deployment job
+      - name: Run Tests
+        shell: bash
+        run: |
+            pushd './${{ env.API_TESTS_PATH }}'
+            dotnet test --configuration ${{ env.CONFIGURATION }}      
+            popd
+            
+      - name: Upload Test Results
         uses: actions/upload-artifact@v2
         with:
-          name: .net-app
-          path: ${{env.API_PACKAGE_PATH}}
+          name: 'Test Run'
+          path: ${{github.workspace}}/${{env.TEST_FILE_NAME}}
+        
+#       - name: Upload artifact for deployment job
+#         uses: actions/upload-artifact@v2.3.1
+#         with:
+#           name: api-app
+#           path: ${{env.API_PACKAGE_PATH}}
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: build
+# #     environment:
+# #       name: 'debug'
+# #       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: .net-app
+#     steps:
+#       - name: Download artifact from build job
+#         uses: actions/download-artifact@v2
+#         with:
+#           name: api-app
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@0b651ed7546ecfc75024011f76944cb9b381ef1e
+      - name: Deploy Azure Web Api
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: ${{ env.API_PACKAGE_PATH }}\
           publish-profile: ${{ secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE }}
-          package: ${{ env.API_PACKAGE_PATH }}
 
 
 # jobs:
