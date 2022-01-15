@@ -66,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: api-app
-          path: './${{ env.AZURE_WEBAPP_SOURCE_PATH }}/${{env.AZURE_WEBAPP_PACKAGE_PATH}}'
+          path: '${{ env.AZURE_WEBAPP_SOURCE_PATH }}/api'
 
   deploy:
     runs-on: ubuntu-latest
