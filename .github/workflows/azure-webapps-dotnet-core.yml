@@ -17,13 +17,14 @@
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
 
-name: Build and deploy ASP.Net Core app to an Azure Web App
+name: Build and Deploy ASP.Net Core Web API
 
 env:
   CONFIGURATION: Debug
   AZURE_WEBAPP_NAME: app-api-blazorgolf    # set this to the name of your Azure Web App
   AZURE_WEBAPP_SOURCE_PATH: './src/BlazorGolf.Api'      # set this to the path to your web app project, defaults to the repository root
   AZURE_WEBAPP_PACKAGE_PATH: './api'      # set this to the path to your web app project, defaults to the repository root
+  API_PACKAGE_NAME: 'api-app' 
   DOTNET_VERSION: '6.0.x'                 # set this to the .NET Core version to use
 
 on:
@@ -54,7 +55,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Build with dotnet
+      - name: Build and Publish
         shell: bash
         run: |
           pushd '${{ env.AZURE_WEBAPP_SOURCE_PATH }}'
@@ -65,7 +66,7 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: api-app
+          name: ${{env.API_PACKAGE_NAME}}
           path: '${{ env.AZURE_WEBAPP_SOURCE_PATH }}/api'
 
   deploy:
@@ -89,4 +90,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE }}
-          package: 'api-app'
+          package: ${{env.API_PACKAGE_NAME}}
