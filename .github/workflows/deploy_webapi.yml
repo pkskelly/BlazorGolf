@@ -7,9 +7,7 @@ on:
     branches: [ main ]
     paths:
       - 'src/BlazorGolf.Api/**'
-    paths-ignore:
-      - '**/*.md'
-
+      
 env:
   CONFIGURATION: Debug 
   DOTNET_VERSION: 6.0.x
@@ -59,19 +57,6 @@ jobs:
             pushd './${{ env.API_TESTS_PATH }}'
             dotnet test --configuration ${{ env.CONFIGURATION }}      
             popd          
-
-#   deploy:
-#     runs-on: ubuntu-latest
-#     needs: build
-# #     environment:
-# #       name: 'debug'
-# #       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-#     steps:
-#       - name: Download artifact from build job
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: api-app
 
       - name: Deploy Azure Web Api
         uses: azure/webapps-deploy@v2
