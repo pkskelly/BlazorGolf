@@ -20,14 +20,16 @@
 name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: your-app-name    # set this to the name of your Azure Web App
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '5'                 # set this to the .NET Core version to use
+  AZURE_WEBAPP_NAME: app-api-blazorgolf    # set this to the name of your Azure Web App
+  AZURE_WEBAPP_PACKAGE_PATH: './src/BlazorGolf.Api'      # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '6.0.2'                 # set this to the .NET Core version to use
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'src/BlazorGolf.Api/**'
   workflow_dispatch:
 
 jobs:
@@ -51,16 +53,16 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Debug
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Debug -o ${{env.DOTNET_ROOT}}/blazorapi
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.DOTNET_ROOT}}/blazorapi
 
   deploy:
     runs-on: ubuntu-latest
@@ -80,5 +82,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
