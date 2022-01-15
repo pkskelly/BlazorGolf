@@ -1,4 +1,4 @@
-name: Build and Deploy ASP.Net Core Web API
+name: Deploy BlazorGold Web API
 
 env:
   CONFIGURATION: Debug
