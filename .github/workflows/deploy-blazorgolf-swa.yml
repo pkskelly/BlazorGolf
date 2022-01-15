@@ -1,4 +1,4 @@
-name: Deploy BlazorGold Static Web App CI/CD
+name: Deploy BlazorGolf Static Web App CI/CD
 
 on:
   push:

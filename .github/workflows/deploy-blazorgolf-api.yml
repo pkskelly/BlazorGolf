@@ -1,4 +1,4 @@
-name: Deploy BlazorGold Web API
+name: Deploy BlazorGolf Web API CI/CD
 
 env:
   CONFIGURATION: Debug
