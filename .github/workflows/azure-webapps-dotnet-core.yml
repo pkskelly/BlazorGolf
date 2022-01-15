@@ -89,4 +89,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE }}
-          package: './api-app.zip'
+          package: '/api-app'
