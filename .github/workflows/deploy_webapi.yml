@@ -7,6 +7,8 @@ on:
     branches: [ main ]
     paths:
       - 'src/BlazorGolf.Api/**'
+    paths-ignore:
+      - '**/*.md'
 
 env:
   CONFIGURATION: Debug 
@@ -47,7 +49,7 @@ jobs:
       - name: List package path contents
         shell: bash
         run: |
-            pushd './${{ env.API_TESTS_PATH }}'
+            pushd './${{ env.API_OUTPUT_PATH }}'
             ls -l
             popd
         
@@ -56,19 +58,7 @@ jobs:
         run: |
             pushd './${{ env.API_TESTS_PATH }}'
             dotnet test --configuration ${{ env.CONFIGURATION }}      
-            popd
-            
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v2
-        with:
-          name: 'Test Run'
-          path: ${{github.workspace}}/${{env.TEST_FILE_NAME}}
-        
-#       - name: Upload artifact for deployment job
-#         uses: actions/upload-artifact@v2.3.1
-#         with:
-#           name: api-app
-#           path: ${{env.API_PACKAGE_PATH}}
+            popd          
 
 #   deploy:
 #     runs-on: ubuntu-latest
