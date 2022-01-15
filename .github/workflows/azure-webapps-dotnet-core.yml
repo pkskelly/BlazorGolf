@@ -53,10 +53,11 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build --configuration Debug
-
-      - name: dotnet publish
-        run: dotnet publish -c Debug -o ${{env.DOTNET_ROOT}}/blazorapi
+        run: |
+          pushd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          dotnet build --configuration Debug
+          dotnet publish -c Debug -o ${{env.DOTNET_ROOT}}/blazorapi
+          popd
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -67,9 +68,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: 'Development'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
@@ -83,4 +81,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.DEV_AZURE_WEBAPI_PUBLISH_PROFILE }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          package: ${{env.DOTNET_ROOT}}/blazorapi
