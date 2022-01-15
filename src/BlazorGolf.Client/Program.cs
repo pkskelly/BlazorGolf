@@ -12,7 +12,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-var blazorGolfApiUri = new Uri("https://localhost:7019/");
+var blazorGolfApiUri = new Uri(builder.Configuration.GetValue<string>("ApiEnpointUrl"));
 void RegisterTypedClient<TClient, TImplementation>(Uri apiBaseUrl) where TClient : class where TImplementation : class, TClient
 {
     builder.Services.AddHttpClient<TClient, TImplementation>(client =>
