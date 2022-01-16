@@ -1,0 +1,294 @@
+[
+    {
+        "Courses": {
+            "CourseId": "e77966cc-5934-444c-b52b-da2b0d5cf680",
+            "City": "Lawrenceville",
+            "Name": "Collins Hill Golf Club",
+            "PartitionKey": "Course",
+            "State": "GA",
+            "Tees": [
+                {
+                    "TeeId": "43361d29-e1ca-49c6-8280-843690518f29",
+                    "BackNineRating": 36.5,
+                    "BackNineSlope": 142,
+                    "BogeyRating": 110.3,
+                    "FrontNineRating": 36.5,
+                    "FrontNineSlope": 142,
+                    "Name": "Blue",
+                    "Par": 72,
+                    "Rating": 69.9,
+                    "Slope": 132,
+                    "Holes": [
+                        {
+                            "HoleId": "777f9c0f-4f46-4bb6-bf0d-a40430ef47b1",
+                            "HoleNumber": 1,
+                            "Par": 5,
+                            "Yardage": 478,
+                            "Handicap": 7
+                        },
+                        {
+                            "HoleId": "3c40c1a7-b066-4b09-9db1-cc9f11eb237f",
+                            "HoleNumber": 2,
+                            "Yardage": 436,
+                            "Par": 4,
+                            "Handicap": 5
+                        },
+                        {
+                            "HoleId": "b225a5a8-653d-497d-897a-d3960a019f55",
+                            "HoleNumber": 3,
+                            "Yardage": 308,
+                            "Par": 4,
+                            "Handicap": 11
+                        },
+                        {
+                            "HoleId": "59b39508-7daa-4277-9069-17f06c248d18",
+                            "HoleNumber": 4,
+                            "Yardage": 169,
+                            "Par": 3,
+                            "Handicap": 17
+                        },
+                        {
+                            "HoleId": "dee71631-ec5e-4f2e-b3bc-ce0e13bd7883",
+                            "HoleNumber": 5,
+                            "Yardage": 401,
+                            "Par": 4,
+                            "Handicap": 13
+                        },
+                        {
+                            "HoleId": "a6643748-5044-4bd8-982c-38f2438fe70f",
+                            "HoleNumber": 6,
+                            "Yardage": 459,
+                            "Par": 5,
+                            "Handicap": 1
+                        },
+                        {
+                            "HoleId": "6e5a275a-105e-42a1-9636-24d591487f4d",
+                            "HoleNumber": 7,
+                            "Yardage": 197,
+                            "Par": 3,
+                            "Handicap": 9
+                        },
+                        {
+                            "HoleId": "e24c47bb-6c08-4387-9c28-94770930cdcb",
+                            "HoleNumber": 8,
+                            "Yardage": 536,
+                            "Par": 5,
+                            "Handicap": 15
+                        },
+                        {
+                            "HoleId": "37d32be1-816b-4217-8f34-392a9bde624a",
+                            "HoleNumber": 9,
+                            "Yardage": 341,
+                            "Par": 4,
+                            "Handicap": 3
+                        },
+                        {
+                            "HoleId": "53f3f865-132c-417c-ae6d-933dbc8eed2d",
+                            "HoleNumber": 10,
+                            "Yardage": 360,
+                            "Par": 4,
+                            "Handicap": 14
+                        },
+                        {
+                            "HoleId": "55a7fa2d-2b56-480a-b64f-45fb35d97d2e",
+                            "HoleNumber": 11,
+                            "Yardage": 365,
+                            "Par": 4,
+                            "Handicap": 2
+                        },
+                        {
+                            "HoleId": "201342bc-fa6f-4e2e-bd11-090501f840fe",
+                            "HoleNumber": 12,
+                            "Yardage": 310,
+                            "Par": 4,
+                            "Handicap": 16
+                        },
+                        {
+                            "HoleId": "16d4095d-de78-4105-9382-20285f77966d",
+                            "HoleNumber": 13,
+                            "Yardage": 98,
+                            "Par": 3,
+                            "Handicap": 18
+                        },
+                        {
+                            "HoleId": "e015a09a-40c7-482a-ada4-246a8c66c91e",
+                            "HoleNumber": 14,
+                            "Yardage": 299,
+                            "Par": 4,
+                            "Handicap": 12
+                        },
+                        {
+                            "HoleId": "631cf215-3097-46b0-b556-03aa751aed29",
+                            "HoleNumber": 15,
+                            "Yardage": 310,
+                            "Par": 4,
+                            "Handicap": 10
+                        },
+                        {
+                            "HoleId": "67133aa7-4552-4359-a6d8-62bad2e8c687",
+                            "HoleNumber": 16,
+                            "Yardage": 337,
+                            "Par": 4,
+                            "Handicap": 6
+                        },
+                        {
+                            "HoleId": "2539cbee-529b-450a-a474-5c7a06f5a6b6",
+                            "HoleNumber": 17,
+                            "Yardage": 123,
+                            "Par": 3,
+                            "Handicap": 4
+                        },
+                        {
+                            "HoleId": "d4fab6da-5241-4436-b78b-5b7a7b940f3f",
+                            "HoleNumber": 18,
+                            "Yardage": 477,
+                            "Par": 5,
+                            "Handicap": 8
+                        }
+                    ]
+                },
+                {
+                    "TeeId": "dd6e44ca-a112-468b-8f2f-1018f1f79052",
+                    "BackNineRating": 36.5,
+                    "BackNineSlope": 142,
+                    "BogeyRating": 110.3,
+                    "FrontNineRating": 36.5,
+                    "FrontNineSlope": 142,
+                    "Name": "Green",
+                    "Par": 72,
+                    "Rating": 68.3,
+                    "Slope": 130,
+                    "Holes": [
+                        {
+                            "HoleId": "a4aea1d6-722b-4d3b-ba63-1fe17c55b9a7",
+                            "HoleNumber": 1,
+                            "Par": 5,
+                            "Yardage": 478,
+                            "Handicap": 7
+                        },
+                        {
+                            "HoleId": "c71834e9-adb3-47de-b78a-f54d81133db1",
+                            "HoleNumber": 2,
+                            "Yardage": 406,
+                            "Par": 4,
+                            "Handicap": 5
+                        },
+                        {
+                            "HoleId": "bcd76972-8986-48b0-8784-f7202b99f1a2",
+                            "HoleNumber": 3,
+                            "Yardage": 308,
+                            "Par": 4,
+                            "Handicap": 11
+                        },
+                        {
+                            "HoleId": "6799ca2b-3807-46f5-9c55-c6717098d098",
+                            "HoleNumber": 4,
+                            "Yardage": 139,
+                            "Par": 3,
+                            "Handicap": 17
+                        },
+                        {
+                            "HoleId": "500e672b-de18-4698-be61-f60bd196e48c",
+                            "HoleNumber": 5,
+                            "Yardage": 337,
+                            "Par": 4,
+                            "Handicap": 13
+                        },
+                        {
+                            "HoleId": "625a873c-f884-40ec-865b-b981954d7f4a",
+                            "HoleNumber": 6,
+                            "Yardage": 444,
+                            "Par": 5,
+                            "Handicap": 1
+                        },
+                        {
+                            "HoleId": "a89c8470-ee65-46df-9eb3-76a03b645668",
+                            "HoleNumber": 7,
+                            "Yardage": 169,
+                            "Par": 3,
+                            "Handicap": 9
+                        },
+                        {
+                            "HoleId": "5495b1ac-d133-4623-9b3d-9ed82de2490a",
+                            "HoleNumber": 8,
+                            "Yardage": 488,
+                            "Par": 5,
+                            "Handicap": 15
+                        },
+                        {
+                            "HoleId": "b8142ff7-a8f2-403e-828c-b066a1fc2343",
+                            "HoleNumber": 9,
+                            "Yardage": 341,
+                            "Par": 4,
+                            "Handicap": 3
+                        },
+                        {
+                            "HoleId": "33084b55-d45a-4b17-8b5c-043e9990583e",
+                            "HoleNumber": 10,
+                            "Yardage": 360,
+                            "Par": 4,
+                            "Handicap": 14
+                        },
+                        {
+                            "HoleId": "b38f9c7f-a983-4934-9ef8-89e6dcd6c820",
+                            "HoleNumber": 11,
+                            "Yardage": 365,
+                            "Par": 4,
+                            "Handicap": 2
+                        },
+                        {
+                            "HoleId": "53eb6515-116d-40ec-adc5-f37de9ad161c",
+                            "HoleNumber": 12,
+                            "Yardage": 310,
+                            "Par": 4,
+                            "Handicap": 16
+                        },
+                        {
+                            "HoleId": "cc014195-2f6a-4ca1-901c-133c89ba8d99",
+                            "HoleNumber": 13,
+                            "Yardage": 98,
+                            "Par": 3,
+                            "Handicap": 18
+                        },
+                        {
+                            "HoleId": "cdeb3414-8f8f-4d04-8c49-23ce692c2154",
+                            "HoleNumber": 14,
+                            "Yardage": 292,
+                            "Par": 4,
+                            "Handicap": 12
+                        },
+                        {
+                            "HoleId": "53326bd8-d02e-48c0-b53a-d4ff5c2d4a58",
+                            "HoleNumber": 15,
+                            "Yardage": 310,
+                            "Par": 4,
+                            "Handicap": 10
+                        },
+                        {
+                            "HoleId": "e0a7a8f1-2d97-49be-a25b-8480b7cd98d1",
+                            "HoleNumber": 16,
+                            "Yardage": 311,
+                            "Par": 4,
+                            "Handicap": 6
+                        },
+                        {
+                            "HoleId": "452804be-b5d2-40a5-a47c-868dbf221a7d",
+                            "HoleNumber": 17,
+                            "Yardage": 123,
+                            "Par": 3,
+                            "Handicap": 4
+                        },
+                        {
+                            "HoleId": "176f9dd4-b158-4130-87d2-580570bc5fd1",
+                            "HoleNumber": 18,
+                            "Yardage": 440,
+                            "Par": 5,
+                            "Handicap": 8
+                        }
+                    ]
+                }
+ 
+            ]
+        }
+    }
+]
