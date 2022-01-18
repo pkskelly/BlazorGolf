@@ -23,16 +23,18 @@ else
         <tbody>
             @foreach (var course in @Courses)
             {
+                var editUrl = $"/coursepages/editcourse/{@course.CourseId}";
+                var deleteUrl = $"/coursepages/deletecourse/{@course.CourseId}";
                 <tr>
                     <td><MudIcon Icon="@Icons.Filled.SportsGolf" Size="Size.Large" Title="@course.Name"/></td>
                     <td>@course.Name</td>
                     <td>@course.City</td>
                     <td>@course.State</td>
                     <td>
-                        <MudChip Icon="@Icons.Filled.Create" Color="Color.Info" Size="Size.Medium" Link="/coursepages/editcourse">Edit</MudChip>
+                        <MudChip Icon="@Icons.Filled.Create" Color="Color.Info" Size="Size.Medium" Link="@editUrl">Edit</MudChip>
                         <AuthorizeView Roles="weather.admin">
                             <ChildContent>
-                                <MudChip Icon="@Icons.Filled.RemoveCircle" Color="Color.Error"Size="Size.Medium" Link="/coursepages/deletecourse">Delete</MudChip>
+                                <MudChip Icon="@Icons.Filled.RemoveCircle" Color="Color.Error"Size="Size.Medium" Link="@deleteUrl">Delete</MudChip>
                             </ChildContent>
                             <NotAuthorized>
                                 <MudChip Icon="@Icons.Filled.RemoveCircle" Color="Color.Error"Size="Size.Medium" Disabled="true">Delete</MudChip>
