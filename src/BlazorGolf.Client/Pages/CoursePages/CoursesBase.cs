@@ -13,6 +13,9 @@ namespace BlazorGolf.Client.Pages
     public class CourseBase: ComponentBase
     {
         [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
+        [Inject]
         public ICourseService CourseService { get; set; }
 
         [Inject]
@@ -24,30 +27,16 @@ namespace BlazorGolf.Client.Pages
 
         public string[] Headings { get; set; } = new string[] { "", "Name", "City", "State", "" };
 
-
-        // protected AddEmployeeDialog AddEmployeeDialog { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                Courses = (await CourseService.GetCourses()).ToList();                
-            } 
+                Courses = (await CourseService.GetCourses()).ToList();
+            }
             catch(Exception e)
             {
                 Message = "Could not load courses!";
-            }   
+            }
         }
-
-        // public async void AddEmployeeDialog_OnDialogClose()
-        // {
-        //     Employees = (await EmployeeDataService.GetAllEmployees()).ToList();
-        //     StateHasChanged();
-        // }
-
-        // protected void QuickAddEmployee()
-        // {
-        //     AddEmployeeDialog.Show();
-        // }
     }
 }

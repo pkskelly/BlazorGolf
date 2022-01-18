@@ -1,5 +1,6 @@
 # BlazorGolf
-[![Build and Deploy Blazor Golf API](https://github.com/pkskelly/BlazorGolf/actions/workflows/deploy_webapi.yml/badge.svg)](https://github.com/pkskelly/BlazorGolf/actions/workflows/deploy_webapi.yml) | [![Azure Static Web Apps CI/CD](https://github.com/pkskelly/BlazorGolf/actions/workflows/azure-static-web-apps-blue-coast-0041f950f.yml/badge.svg)](https://github.com/pkskelly/BlazorGolf/actions/workflows/azure-static-web-apps-blue-coast-0041f950f.yml)
+[![Build and Deploy Blazor Golf API](https://github.com/pkskelly/BlazorGolf/actions/workflows/deploy_webapi.yml/badge.svg)](https://github.com/pkskelly/BlazorGolf/actions/workflows/deploy_webapi.yml) | [![Azure Static Web Apps CI/CD](https://github.com/pkskelly/BlazorGolf/actions/workflows/azure-static-web-apps-blue-coast-0041f950f.yml/badge.svg)](https://github.com/pkskelly/BlazorGolf/actions/workflows/azure-static-web-apps-blue-coast-0041f950f.yml) | 
+
 ## Summary 
 A Blazor WebAssembly client application and a .NET 6 Web API sample application to learn/practice Blazor WebAssembly and Web API design and development.
 
