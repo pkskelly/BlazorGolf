@@ -66,7 +66,7 @@
                         </MudGrid>
                     </MudCardContent>
                     <MudCardActions Class="pb-4 pl-4">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="@(() => SaveChanges("Profile details saved", Severity.Success))">Save Changes</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="@(() => SaveChanges("Profile details saved", MudBlazor.Severity.Success))">Save Changes</MudButton>
                     </MudCardActions>
                 </MudCard>
             </MudItem>
@@ -112,7 +112,7 @@
                 </MudGrid>
             </MudCardContent>
             <MudCardActions Class="pb-4 pl-4">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="@(() => SaveChanges("Notification settings saved", Severity.Success))">Save Changes</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="@(() => SaveChanges("Notification settings saved", MudBlazor.Severity.Success))">Save Changes</MudButton>
             </MudCardActions>
         </MudCard>
     </MudTabPanel>
@@ -138,7 +138,7 @@
                     </MudGrid>
                 </MudCardContent>
                 <MudCardActions Class="pb-4 pl-4">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="@(() => SaveChanges("Current Password is incorrect", Severity.Error))">Change Password</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" @onclick="@(() => SaveChanges("Current Password is incorrect", MudBlazor.Severity.Error))">Change Password</MudButton>
                 </MudCardActions>
             </MudCard>
         </MudForm>
@@ -181,7 +181,7 @@
         }
     }
 
-    void SaveChanges(string message, Severity severity)
+    void SaveChanges(string message, MudBlazor.Severity severity)
     {
         Snackbar.Add(message, severity, config =>
         {

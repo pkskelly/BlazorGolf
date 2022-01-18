@@ -152,6 +152,7 @@ namespace ApiTests.Courses
                 .RuleFor(c => c.ETag, Guid.NewGuid().ToString())
                 .RuleFor(c => c.City, f => f.Address.City())
                 .RuleFor(c => c.State, f =>  f.Address.StateAbbr())
+                .RuleFor(c => c.Phone, f => f.Phone.PhoneNumberFormat())
                 .Generate(numberOfCourses);
             return courses;
         }
@@ -168,6 +169,7 @@ namespace ApiTests.Courses
                 .RuleFor(c => c.ETag, Guid.NewGuid().ToString())
                 .RuleFor(c => c.City, f => f.Address.City())
                 .RuleFor(c => c.State, f => f.Address.StateAbbr())
+                .RuleFor(c => c.Phone, f => f.Phone.PhoneNumberFormat())
                 .RuleFor(c => c.Tees, f => new List<Tee>()
                 {
                     new Tee()

@@ -136,6 +136,37 @@ namespace ApiTests.Courses
         }
 
         [Test]
+        public void Course_WithMissingPhone_Fails()
+        {
+            var course = new Course();
+            var result = _courseValidator.TestValidate(course);
+            result.ShouldHaveValidationErrorFor(x => x.Phone);
+        }
+
+        [Test]
+        public void Course_WithInvalidPhone_Fails()
+        {
+            var course = new Course();
+            course.Phone = "900-0000";
+            var result = _courseValidator.TestValidate(course);
+            result.ShouldHaveValidationErrorFor(x => x.Phone);
+        }
+
+        [TestCase("123-456-7890")]
+        [TestCase("123 456-7890")]
+        [TestCase("123 456 7890")]
+        [TestCase("+1 123 456 7890")]
+        [TestCase("+1 (123)456-7890")]
+        public void Course_WithValidPhone_Succeeds(string phoneNumber)
+        {
+            var course = new Course();
+            course.Phone = phoneNumber;
+            var result = _courseValidator.TestValidate(course);
+            result.ShouldNotHaveValidationErrorFor(x => x.Phone);
+        }
+
+
+        [Test]
         public void Tee_DefaultNewObject_Fails()
         {
             var tee = new Tee();
