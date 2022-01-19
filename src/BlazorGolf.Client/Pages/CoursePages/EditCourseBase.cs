@@ -16,10 +16,6 @@ namespace BlazorGolf.Client.Pages
     {
         [Inject] ISnackbar? Snackbar { get; set; }
 
-        public MudForm form;
-        public bool FormValid { get; set; }
-
-
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
@@ -32,12 +28,19 @@ namespace BlazorGolf.Client.Pages
         [Parameter]
         public Guid CourseId { get; set; }
 
+        public MudForm form;
+        public bool FormValid { get; set; }
         public Course? model { get; set; } = new Course();
         public CourseValidator courseValidator = new CourseValidator();
+        protected bool Saved;
 
         protected override async Task OnInitializedAsync()
         {
-
+            Saved = false;
+            if (CourseId != Guid.Empty)
+            {
+                model = await CourseService!.GetCourse(CourseId);
+            }
         }
 
         public async Task HandleSubmit()

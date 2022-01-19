@@ -31,18 +31,38 @@ namespace BlazorGolf.Client.Services
                 {
                     Scopes = new[] { "api://weather/weather.read" }
                 }
-            );           
+            );
             if (tokenResult.TryGetToken(out var token))
             {
                 var accessToken = token.Value;
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
                 return await _httpClient.GetFromJsonAsync<IEnumerable<Course>>("api/courses");
-                _logger.LogInformation("GetCourses completed");
             }
             else
             {
                 _logger.LogInformation("GetCourses token failure");
-            }          
+            }
+            return null;
+        }
+
+        public async Task<Course> GetCourse(Guid courseId) {
+            _logger.LogInformation("GetCourse called");
+            var tokenResult = await _tokenProvider.RequestAccessToken(
+                new AccessTokenRequestOptions
+                {
+                    Scopes = new[] { "api://weather/weather.read" }
+                }
+            );
+            if (tokenResult.TryGetToken(out var token))
+            {
+                var accessToken = token.Value;
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                return await _httpClient.GetFromJsonAsync<Course>($"api/courses/{courseId}");
+            }
+            else
+            {
+                _logger.LogInformation("GetCourse token failure");
+            }
             return null;
         }
     }
