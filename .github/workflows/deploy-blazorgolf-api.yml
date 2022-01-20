@@ -52,7 +52,7 @@ jobs:
           name: ${{env.API_PACKAGE_NAME}}
           path: '${{ env.AZURE_WEBAPP_SOURCE_PATH }}/api'
 
-      - name: 'Install RCovergae Tools'
+      - name: 'Install Covergae Tools'
         shell: bash
         run: |
           pushd './${{ env.TESTAPP_PACKAGE_PATH }}'
@@ -66,6 +66,7 @@ jobs:
           pushd './${{ env.TESTAPP_PACKAGE_PATH }}'
           dotnet test --collect:"XPlat Code Coverage" --configuration ${{ env.CONFIGURATION }}
           ./tools/reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:"${{github.workspace}}/coveragereport" -reporttypes:Html
+          dotnet test --configuration ${{ env.CONFIGURATION }} --logger html --results-directory testresults --no-build      
           popd
          
         # upload report as build artifact 
