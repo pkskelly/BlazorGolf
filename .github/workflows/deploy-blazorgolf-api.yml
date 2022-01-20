@@ -2,6 +2,8 @@ name: Deploy BlazorGolf Web API CI/CD
 
 env:
   CONFIGURATION: Debug
+  TESTAPP_PACKAGE_PATH: './tests/ApiTests'
+  TEST_FILE_NAME: 'apitests'
   AZURE_WEBAPP_NAME: app-api-blazorgolf 
   AZURE_WEBAPP_SOURCE_PATH: './src/BlazorGolf.Api'
   AZURE_WEBAPP_PACKAGE_PATH: './api'
@@ -49,6 +51,20 @@ jobs:
         with:
           name: ${{env.API_PACKAGE_NAME}}
           path: '${{ env.AZURE_WEBAPP_SOURCE_PATH }}/api'
+
+      - name: 'Run unit tests'
+        shell: bash
+        run: |
+          pushd './${{ env.TESTAPP_PACKAGE_PATH }}'
+          dotnet test --configuration ${{ env.CONFIGURATION }} --logger html --results-directory testresults --no-build      
+          popd
+         
+        # upload report as build artifact 
+      - name: Upload a Build Artifact (Tests)
+        uses: actions/upload-artifact@v2
+        with:
+          name : TestRunReports
+          path: ${{github.workspace}}/testresults
 
   deploy:
     runs-on: ubuntu-latest
