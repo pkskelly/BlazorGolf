@@ -11,7 +11,7 @@ namespace BlazorGolf.Api.Controllers
     //[Authorize]
     [ApiController]
     [Route("api/courses")]
-    [EnableCors("AllowEveryone")]    
+    [EnableCors("AllowEveryone")]
     public class CoursesController : ControllerBase
     {
 
@@ -63,7 +63,7 @@ namespace BlazorGolf.Api.Controllers
         }
 
         // POST api/courses
-        [HttpPost]
+        [HttpPost(Name = "CreateCourse")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] Course course)
@@ -75,20 +75,95 @@ namespace BlazorGolf.Api.Controllers
             {
                 if (result.IsValid)
                 {
-                    await _repository.Add(course);
+                    await _repository.Create(course);
                     return CreatedAtRoute("GetCourse", new { id = course.CourseId }, course);
                 }
                 else
                 {
                     return BadRequest(result.Errors);
                 }
-            } catch (DbUpdateException ex)
+            }
+            catch (DbUpdateException ex)
             {
                 _logger.LogError($"CreateCourse failed with exception: {ex.Message}");
                 return BadRequest(
                     new
                     {
                         Error = $"Course with id {course.CourseId} already exists"
+                    }
+                );
+            }
+        }
+
+        // PUT api/courses
+        [HttpPut("{id:guid}", Name = "UpdateCourse")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put(Guid id, [FromBody] Course course)
+        {
+            _logger.LogInformation($"Update called with id: {id}");
+            if (course == null)
+            {
+                return BadRequest(
+                    new
+                    {
+                        Error = $"Course must not be null!"
+                    }
+                );
+            }
+            try
+            {
+                var providedCourseGuid = new Guid(course.CourseId);
+                if (id != providedCourseGuid)
+                {
+                    _logger.LogWarning($"URI path id {id} does not match body course id {course.CourseId}!");
+                    return BadRequest(
+                        new
+                        {
+                            Error = $"URI path id {id} does not match body course id {course.CourseId}!"
+                        }
+                    );
+                }
+                var existingCourse = await _repository.GetById(id.ToString());
+                if (existingCourse == null)
+                {
+                    return NotFound(
+                        new
+                        {
+                            Error = $"Course with id {id} not found!"
+                        }
+                    );
+                }
+                var result = _courseValidator.Validate(course);
+
+                if (result.IsValid)
+                {
+                    await _repository.Update(course);
+                    return AcceptedAtRoute("UpdateCourse", new {id = course.CourseId }, course);
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError($"UpdateCourse failed with exception: {ex.Message}");
+                return BadRequest(
+                    new
+                    {
+                        Error = $"Error updating course with id {course.CourseId}!"
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"UpdateCourse failed with exception: {ex.Message}");
+                return BadRequest(
+                    new
+                    {
+                        Error = $"Error updating course with id {course.CourseId}!"
                     }
                 );
             }
@@ -101,7 +176,7 @@ namespace BlazorGolf.Api.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             _logger.LogInformation($"DeleteCourse called with id: {id.ToString()}");
-            await _repository.Remove(id.ToString());
+            await _repository.Delete(id.ToString());
             return NoContent();
         }
     }

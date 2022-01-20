@@ -143,20 +143,22 @@ namespace ApiTests.Courses
             result.ShouldHaveValidationErrorFor(x => x.Phone);
         }
 
-        [Test]
-        public void Course_WithInvalidPhone_Fails()
+        [TestCase("e")]
+        [TestCase("123654")]
+        [TestCase("123 456-78907")]
+        [TestCase("123-456-78907")]
+        public void Course_WithInvalidPhone_Fails( string phoneNumber)
         {
             var course = new Course();
-            course.Phone = "900-0000";
+            course.Phone = phoneNumber;
             var result = _courseValidator.TestValidate(course);
             result.ShouldHaveValidationErrorFor(x => x.Phone);
         }
 
-        [TestCase("123-456-7890")]
-        [TestCase("123 456-7890")]
-        [TestCase("123 456 7890")]
-        [TestCase("+1 123 456 7890")]
-        [TestCase("+1 (123)456-7890")]
+        [TestCase("678 555-1212")]
+        [TestCase("(223) 456-7890")]
+        [TestCase("223-456-7890")]
+        [TestCase("12345678907")]
         public void Course_WithValidPhone_Succeeds(string phoneNumber)
         {
             var course = new Course();

@@ -25,17 +25,17 @@ namespace BlazorGolf.Client.Pages
 
         public string Message { get; set; }
 
-        public string[] Headings { get; set; } = new string[] { "", "Name", "City", "State", "" };
+        public string[] Headings { get; set; } = new string[] { "", "Name", "City", "State", "Phone"};
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                Courses = (await CourseService.GetCourses()).ToList();
+                Courses = (await CourseService.GetCoursesAsync()).ToList();
             }
             catch(Exception e)
             {
-                Message = "Could not load courses!";
+                Message = "Could not load courses!" + e.Message;
             }
         }
     }

@@ -13,7 +13,10 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 //var blazorGolfApiUri = new Uri(builder.Configuration.GetValue<string>("ApiEnpointUrl"));
-var blazorGolfApiUri = new Uri("https://app-api-blazorgolf.azurewebsites.net/");
+var blazorGolfApiUri = builder.HostEnvironment.IsDevelopment() ?
+                             new Uri(builder.Configuration.GetValue<string>("DevApiEndPointUrl")) :
+                                                        new Uri(builder.Configuration.GetValue<string>("ApiEndPointUrl"));
+
 void RegisterTypedClient<TClient, TImplementation>(Uri apiBaseUrl) where TClient : class where TImplementation : class, TClient
 {
     builder.Services.AddHttpClient<TClient, TImplementation>(client =>
