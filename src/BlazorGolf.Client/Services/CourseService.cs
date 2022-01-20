@@ -23,7 +23,7 @@ namespace BlazorGolf.Client.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Course>> GetCourses()
+        public async Task<IEnumerable<Course>> GetCoursesAsync()
         {
             _logger.LogInformation("GetCourses called");
             var tokenResult = await _tokenProvider.RequestAccessToken(
@@ -45,7 +45,7 @@ namespace BlazorGolf.Client.Services
             return null;
         }
 
-        public async Task<Course> GetCourse(Guid courseId) {
+        public async Task<Course> GetCourseAsync(Guid courseId) {
             _logger.LogInformation("GetCourse called");
             var tokenResult = await _tokenProvider.RequestAccessToken(
                 new AccessTokenRequestOptions
@@ -64,6 +64,87 @@ namespace BlazorGolf.Client.Services
                 _logger.LogInformation("GetCourse token failure");
             }
             return null;
+        }
+
+        public async Task<Course> CreateCourseAsync(Course course)
+        {
+            _logger.LogInformation("AddCourse called");
+            var tokenResult = await _tokenProvider.RequestAccessToken(
+                new AccessTokenRequestOptions
+                {
+                    Scopes = new[] { "api://weather/weather.read" }
+                }
+            );
+            if (tokenResult.TryGetToken(out var token))
+            {
+                var accessToken = token.Value;
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                var response = await _httpClient.PostAsJsonAsync<Course>("api/courses", course);
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Call to API to add course succeeded.");
+                    return await response.Content.ReadFromJsonAsync<Course>();
+                }
+            }
+            else
+            {
+                _logger.LogInformation("GetCourse token failure");
+            }
+            return null;
+        }
+
+        public async Task<Course> UpdateCourseAsync(Course course)
+        {
+            _logger.LogInformation("AddCourse called");
+            var tokenResult = await _tokenProvider.RequestAccessToken(
+                new AccessTokenRequestOptions
+                {
+                    Scopes = new[] { "api://weather/weather.read" }
+                }
+            );
+            if (tokenResult.TryGetToken(out var token))
+            {
+                var accessToken = token.Value;
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                var response = await _httpClient.PutAsJsonAsync<Course>($"api/courses/{course.CourseId}", course);
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Call to API to update course succeeded.");
+                    return await response.Content.ReadFromJsonAsync<Course>();
+                }
+            }
+            else
+            {
+                _logger.LogInformation("UpdateCourse token failure");
+            }
+            return null;
+
+        }
+
+        public async Task DeleteCourseAsync(Course course)
+        {
+            _logger.LogInformation("DeleteCourse called");
+            var tokenResult = await _tokenProvider.RequestAccessToken(
+                new AccessTokenRequestOptions
+                {
+                    Scopes = new[] { "api://weather/weather.read" }
+                }
+            );
+            if (tokenResult.TryGetToken(out var token))
+            {
+                var accessToken = token.Value;
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                var response = await _httpClient.DeleteAsync($"api/courses/{course.CourseId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("Call to API to delete course succeeded.");
+                }
+            }
+            else
+            {
+                _logger.LogInformation("UpdateCourse token failure");
+            }
+            return;
         }
     }
 }

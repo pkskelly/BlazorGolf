@@ -6,7 +6,7 @@ namespace BlazorGolf.Core.Models
     {
         public string CourseId { get; set; } = Guid.NewGuid().ToString();
         public string PartitionKey { get; set; } = "Course";
-        public string? ETag { get; set; } 
+        public string? ETag { get; set; } = "initial" ;
         public string Name { get; set; } = String.Empty;
         public string? City { get; set; } = String.Empty;
         public string? State { get; set; } = String.Empty;

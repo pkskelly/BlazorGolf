@@ -12,6 +12,7 @@ using Bogus;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace ApiTests.Courses
 {
@@ -113,7 +114,7 @@ namespace ApiTests.Courses
             //Arrange
             var courseId = Guid.NewGuid().ToString();
 
-            _courseRepository.Setup(x => x.Remove(courseId)).Returns(Task.CompletedTask);
+            _courseRepository.Setup(x => x.Delete(courseId)).Returns(Task.CompletedTask);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             //Act
             var result = await controller.Delete(Guid.Parse(courseId));
@@ -127,7 +128,7 @@ namespace ApiTests.Courses
         {
             //Arrange
             Course course = GetFakeCourse();
-            _courseRepository.Setup(x => x.Add(course)).ReturnsAsync(course);
+            _courseRepository.Setup(x => x.Create(course)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             controller.ControllerContext = new ControllerContext();
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
@@ -138,6 +139,98 @@ namespace ApiTests.Courses
             ((CreatedAtRouteResult)result).StatusCode.Should().Be(201);
             ((CreatedAtRouteResult)result).Value.Should().BeOfType<Course>();
             ((CreatedAtRouteResult)result).Value.Should().BeEquivalentTo(course);
+        }
+
+        [Test]
+        public async Task CourseController_PutCourse_Returns202()
+        {
+            //Arrange
+            Course course = GetFakeCourse();
+            _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(course);
+            _courseRepository.Setup(x => x.Update(course)).ReturnsAsync(course);
+            var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            //Act
+            var result = await controller.Put(new Guid(course.CourseId), course);
+            //Assert
+            result.Should().BeAssignableTo<AcceptedAtRouteResult>();
+            ((AcceptedAtRouteResult)result).StatusCode.Should().Be(202);
+            ((AcceptedAtRouteResult)result).Value.Should().BeOfType<Course>();
+            ((AcceptedAtRouteResult)result).Value.Should().BeEquivalentTo(course);
+        }
+
+        [Test]
+        public async Task CourseController_PutNullCourse_ReturnsBadRequest()
+        {
+            //Arrange
+            Course course = GetFakeCourse();
+            _courseRepository.Setup(x => x.Update(course)).ReturnsAsync(course);
+            var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            //Act
+            var result = await controller.Put(Guid.NewGuid(), course);
+            //Assert
+            result.Should().BeAssignableTo<BadRequestObjectResult>();
+            ((BadRequestObjectResult)result).StatusCode.Should().Be(400);
+        }
+
+        [Test]
+        public async Task CourseController_PutMismatchCourseIds_ReturnsBadRequest()
+        {
+            //Arrange
+            var testGuid = Guid.NewGuid();
+            Course course = GetFakeCourse();
+            var errorMessage = $"URI path id {testGuid.ToString()} does not match body course id {course.CourseId}!";
+            _courseRepository.Setup(x => x.GetById(testGuid.ToString())).ReturnsAsync(course);
+            _courseRepository.Setup(x => x.Update(course)).ReturnsAsync(course);
+            var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            //Act
+            var result = await controller.Put(testGuid, course);
+            //Assert
+            result.Should().BeAssignableTo<BadRequestObjectResult>();
+            ((BadRequestObjectResult)result).StatusCode.Should().Be(400);
+            var props = GetDynamicProperties(((BadRequestObjectResult)result).Value);
+            props["Error"].Should().Be(errorMessage);
+        }
+
+        [Test]
+        public async Task CourseController_PutCourseIdNotInDatabase_ReturnsNotFound()
+        {
+            //Arrange
+            Course course = GetFakeCourse();
+            Course nullCourse = null;
+            _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(nullCourse);
+            var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            //Act
+            var result = await controller.Put(new Guid(course.CourseId), course);
+            //Assert
+            result.Should().BeAssignableTo<NotFoundObjectResult>();
+            ((NotFoundObjectResult)result).StatusCode.Should().Be(404);
+            var props = GetDynamicProperties(((NotFoundObjectResult)result).Value);
+            props["Error"].Should().Be($"Course with id {course.CourseId} not found!");
+        }
+
+        [Test]
+        public async Task CourseController_PutInvalidCourse_ReturnsBadRequest()
+        {
+            //Arrange
+            Course course = GetFakeCourse();
+            course.Phone = "123459";
+            _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(course);
+            var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            //Act
+            var result = await controller.Put(new Guid(course.CourseId), course);
+            //Assert
+            result.Should().BeAssignableTo<BadRequestObjectResult>();
+            ((BadRequestObjectResult)result).StatusCode.Should().Be(400);
         }
 
         private static List<Course>? GetFakeCourses(int numberOfCourses)
@@ -202,6 +295,14 @@ namespace ApiTests.Courses
                 .Generate();
             return course;
         }
+
+        private static Dictionary<string, object?> GetDynamicProperties(object resultValue)
+        {
+            return (resultValue.GetType()
+                               .GetProperties()
+                               .ToDictionary(p => p.Name, p => p.GetValue(resultValue)));
+        }
+
     }
 }
 

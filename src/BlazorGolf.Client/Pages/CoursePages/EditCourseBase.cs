@@ -17,7 +17,7 @@ namespace BlazorGolf.Client.Pages
         [Inject] ISnackbar? Snackbar { get; set; }
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public NavigationManager? NavigationManager { get; set; }
 
         [Inject]
         public ICourseService? CourseService { get; set; }
@@ -30,16 +30,19 @@ namespace BlazorGolf.Client.Pages
 
         public MudForm form;
         public bool FormValid { get; set; }
+        public bool IsNewCourse { get; set; } = true;
         public Course? model { get; set; } = new Course();
         public CourseValidator courseValidator = new CourseValidator();
-        protected bool Saved;
+
+        public string ButtonText { get; set; } = "Create";
 
         protected override async Task OnInitializedAsync()
         {
-            Saved = false;
             if (CourseId != Guid.Empty)
             {
-                model = await CourseService!.GetCourse(CourseId);
+                model = await CourseService!.GetCourseAsync(CourseId);
+                ButtonText = "Update";
+                IsNewCourse = false;
             }
         }
 
@@ -48,8 +51,33 @@ namespace BlazorGolf.Client.Pages
             await form.Validate();
             if (form.IsValid)
             {
-                Snackbar.Add("Submitted!");
+                if (IsNewCourse)
+                {
+                    await CourseService!.CreateCourseAsync(model);
+                    Logger?.LogInformation($"Added course {model.Name}");
+                    Snackbar?.Add($"Added {@model.Name}!");
+                }
+                else
+                {
+                    await CourseService!.UpdateCourseAsync(model);
+                    Logger?.LogInformation($"Updated course {model.Name}");
+                    Snackbar?.Add($"Updated {@model.Name}!");
+                }
+                NavigationManager.NavigateTo("/coursepages/courses");
             }
         }
+
+        public async Task HandleDelete()
+        {
+            await form.Validate();
+            if (!IsNewCourse)
+            {
+                await CourseService!.DeleteCourseAsync(model);
+                Logger?.LogInformation($"Deleted course {model.Name}");
+                Snackbar.Add($"Deleted {@model.Name}!");
+            }
+            NavigationManager.NavigateTo("/coursepages/courses");
+        }
+
     }
 }

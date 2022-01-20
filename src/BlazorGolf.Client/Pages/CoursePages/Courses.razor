@@ -12,47 +12,51 @@
 else
 {
     <MudSimpleTable Style="overflow-x: auto;">
-        <thead>
-            <tr>
-                @foreach (var h in @Headings)
+    <thead>
+        <tr>
+            <td colspan="@Headings.Length" align="right">
+                <MudChip Icon="@Icons.Filled.Create" Color="Color.Info" Size="Size.Medium" Link="/coursepages/editcourse">New Course</MudChip>
+            </td>
+        </tr>
+        <tr>
+            @foreach (var h in @Headings)
                 {
                     <th>@h</th>
                 }
             </tr>
         </thead>
         <tbody>
-            @foreach (var course in @Courses)
+            @if (Courses.Count == 0)
             {
-                var editUrl = $"/coursepages/editcourse/{@course.CourseId}";
-                var deleteUrl = $"/coursepages/deletecourse/{@course.CourseId}";
                 <tr>
-                    <td><MudIcon Icon="@Icons.Filled.SportsGolf" Size="Size.Large" Title="@course.Name"/></td>
-                    <td>@course.Name</td>
-                    <td>@course.City</td>
-                    <td>@course.State</td>
-                    <td>
-                        <MudChip Icon="@Icons.Filled.Create" Color="Color.Info" Size="Size.Medium" Link="@editUrl">Edit</MudChip>
-                        <AuthorizeView Roles="weather.admin">
-                            <ChildContent>
-                                <MudChip Icon="@Icons.Filled.RemoveCircle" Color="Color.Error"Size="Size.Medium" Link="@deleteUrl">Delete</MudChip>
-                            </ChildContent>
-                            <NotAuthorized>
-                                <MudChip Icon="@Icons.Filled.RemoveCircle" Color="Color.Error"Size="Size.Medium" Disabled="true">Delete</MudChip>
-                            </NotAuthorized>
-                        </AuthorizeView>
-                    </td>
+                    <td colspan="@Headings.Length">No courses found.</td>
                 </tr>
+            } 
+            else
+            {
+                @foreach (var course in @Courses)
+                {
+                    var editUrl = $"/coursepages/editcourse/{@course.CourseId}";
+                    <tr>
+                        <td>
+                            <MudIcon Icon="@Icons.Filled.SportsGolf" Size="Size.Large" Title="@course.Name" />
+                        </td>
+                        <td>@course.Name</td>
+                        <td>@course.City</td>
+                        <td>@course.State</td>
+                        <td>@course.Phone</td>
+                        <td>
+                            <MudChip Icon="@Icons.Filled.Create" Color="Color.Info" Size="Size.Medium" Link="@editUrl">Edit</MudChip>
+                        </td>
+                    </tr>
+                }
             }
             <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td align="right">
-                        <MudChip Icon="@Icons.Filled.Create" Color="Color.Info" Size="Size.Medium" Link="/coursepages/editcourse">New Course</MudChip>
-                    </td>
-                </tr>
+                <td colspan="@Headings.Length" align="right">
+                    <MudChip Icon="@Icons.Filled.Create" Color="Color.Info" Size="Size.Medium"
+                    Link="/coursepages/editcourse">New Course</MudChip>
+                </td>
+            </tr>
         </tbody>
     </MudSimpleTable>
 }
-

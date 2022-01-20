@@ -3,6 +3,8 @@
 
 @inherits EditCourseBase
 
+<h1 class="page-title">Edit Course</h1>
+
 <MudCard>
 	<MudForm Model="@model" @ref="@form" @bind-IsValid="@FormValid">
 		<MudCardContent>
@@ -33,6 +35,14 @@
         </MudCardContent>
 	</MudForm>
     <MudCardActions>
-        <MudButton Disabled="@(!FormValid)" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await HandleSubmit())">Create</MudButton>
+        <MudButton Disabled="@(!FormValid)" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await HandleSubmit())">@ButtonText</MudButton>
+		<AuthorizeView Roles="weather.admin">
+			<ChildContent>
+		        <MudButton Disabled="@(!FormValid)" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" OnClick="@(async () => await HandleDelete())">Delete</MudButton>		
+			</ChildContent>
+			<NotAuthorized>
+		        <MudButton Disabled="true" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto">Delete</MudButton>
+			</NotAuthorized>
+		</AuthorizeView>
     </MudCardActions>
 </MudCard>
