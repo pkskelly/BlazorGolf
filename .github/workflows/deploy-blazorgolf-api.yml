@@ -58,11 +58,6 @@ jobs:
           pushd './${{ env.TESTAPP_PACKAGE_PATH }}'
           dotnet test --collect:"XPlat Code Coverage" --configuration ${{ env.CONFIGURATION }}
           popd
-
-          - name: Setup .NET Core # Required to execute ReportGenerator
-          uses: actions/setup-dotnet@v1
-          with:
-            dotnet-version: 6.0.101
         
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.0.2
