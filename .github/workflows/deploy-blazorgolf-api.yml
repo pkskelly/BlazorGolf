@@ -86,7 +86,7 @@ jobs:
       - name: List package path contents
         shell: bash
         run: |
-          ls -ld $PWD/*
+          ls -ld $PWD/coveragereport
   
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.0.2
