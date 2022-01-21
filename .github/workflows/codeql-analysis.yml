@@ -16,6 +16,8 @@ on:
     branches: [ main ]
   schedule:
     - cron: '36 19 * * 2'
+  workflow_dispatch:
+
 
 jobs:
   analyze:
@@ -72,6 +74,6 @@ jobs:
     - name: Build ⚙
       run:  dotnet build --configuration debug --no-restore --verbosity normal 
       working-directory: src/sdk   
-      
+
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
