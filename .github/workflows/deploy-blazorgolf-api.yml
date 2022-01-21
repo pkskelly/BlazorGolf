@@ -83,6 +83,11 @@ jobs:
           name: CoverageReport # Artifact name        
           path: coveragereport # Directory containing files to upload
 
+      - name: List package path contents
+        shell: bash
+        run: |
+          ls -ld $PWD/*
+  
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.0.2
         with:
