@@ -82,6 +82,14 @@ jobs:
         with:
           name: CoverageReport # Artifact name        
           path: coveragereport # Directory containing files to upload
+
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.0.2
+        with:
+          filename: ${{github.workspace}}/coverage/coverage.cobertura.xml
+          badge: true
+          format: 'markdown'
+          output: 'both'
           
         # upload report as build artifact 
       - name: Upload a Build Artifact (Tests)
