@@ -52,56 +52,83 @@ jobs:
           name: ${{env.API_PACKAGE_NAME}}
           path: '${{ env.AZURE_WEBAPP_SOURCE_PATH }}/api'
 
-      - name: 'Run unit tests'
-        shell: bash
+      - name: Test
         run: |
-          pushd './${{ env.TESTAPP_PACKAGE_PATH }}'
-          dotnet test --collect:"XPlat Code Coverage" --configuration ${{ env.CONFIGURATION }} 
-          popd
-        
-      - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.0.2
-        with:
-          reports: './${{ env.TESTAPP_PACKAGE_PATH }}/TestResults/**/coverage.cobertura.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
-          targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
-          reporttypes: 'HtmlInline;Cobertura' # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
-          sourcedirs: './${{ env.TESTAPP_PACKAGE_PATH }}' # Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.
-          historydir: '' # Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.
-          plugins: '' # Optional plugin files for custom reports or custom history storage (separated by semicolon).
-          assemblyfilters: '+*' # Optional list of assemblies that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-          classfilters: '+*' # Optional list of classes that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-          filefilters: '+*' # Optional list of files that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-          verbosity: 'Info' # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
-          title: 'BlazorGolf Coverage Report' # Optional title.
-          tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
-          customSettings: '' # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
-          toolpath: 'reportgeneratortool' # Default directory for installing the dotnet tool.
-        
-      - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v2.2.3
-        with:
-          name: CoverageReport # Artifact name        
-          path: coveragereport # Directory containing files to upload
-
-      - name: List package path contents
-        shell: bash
+          dotnet test ${{env.TESTAPP_PACKAGE_PATH}} --configuration ${{ env.CONFIGURATION}} --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+    
+      - name: Copy Coverage To Predictable Location
         run: |
-          ls -ld $PWD/**/*
-  
+          cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+    
       - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.0.2
+        uses: irongut/CodeCoverageSummary@v1.2.0
         with:
-          filename: coverage/coverage.cobertura.xml
+          filename: coverage.cobertura.xml
           badge: true
-          format: 'markdown'
-          output: 'both'
+          fail_below_min: true
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: '60 80'
+
+      # - name: 'Run unit tests'
+      #   shell: bash
+      #   run: |
+      #     pushd './${{ env.TESTAPP_PACKAGE_PATH }}'
+      #     dotnet test --collect:"XPlat Code Coverage" --configuration ${{ env.CONFIGURATION }} 
+      #     popd
+        
+      # - name: Generate Report
+      #   uses: danielpalme/ReportGenerator-GitHub-Action@5.0.2
+      #   with:
+      #     reports: './${{ env.TESTAPP_PACKAGE_PATH }}/TestResults/**/coverage.cobertura.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
+      #     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
+      #     reporttypes: 'HtmlInline;Cobertura' # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
+      #     sourcedirs: './${{ env.TESTAPP_PACKAGE_PATH }}' # Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.
+      #     historydir: '' # Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.
+      #     plugins: '' # Optional plugin files for custom reports or custom history storage (separated by semicolon).
+      #     assemblyfilters: '+*' # Optional list of assemblies that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
+      #     classfilters: '+*' # Optional list of classes that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
+      #     filefilters: '+*' # Optional list of files that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
+      #     verbosity: 'Info' # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
+      #     title: 'BlazorGolf Coverage Report' # Optional title.
+      #     tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
+      #     customSettings: '' # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
+      #     toolpath: 'reportgeneratortool' # Default directory for installing the dotnet tool.
+        
+      # - name: Upload coverage report artifact
+      #   uses: actions/upload-artifact@v2.2.3
+      #   with:
+      #     name: CoverageReport # Artifact name        
+      #     path: coveragereport # Directory containing files to upload
+
+      # - name: List package path contents
+      #   shell: bash
+      #   run: |
+      #     ls -ld $PWD/**/*
+
+      # - name: Copy Coverage To Predictable Location
+      #   shell: bash
+      #   run: |
+      #     cp coverage/**/coverage.cobertura.xml coverage.cobertura.xml
+    
+  
+      # - name: Code Coverage Summary Report
+      #   uses: irongut/CodeCoverageSummary@v1.0.2
+      #   with:
+      #     filename: coverage/coverage.cobertura.xml
+      #     badge: true
+      #     format: 'markdown'
+      #     output: 'both'
           
-        # upload report as build artifact 
-      - name: Upload a Build Artifact (Tests)
-        uses: actions/upload-artifact@v2
-        with:
-          name : CoverageReport
-          path: ${{github.workspace}}/coveragereport
+      #   # upload report as build artifact 
+      # - name: Upload a Build Artifact (Tests)
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name : CoverageReport
+      #     path: ${{github.workspace}}/coveragereport
 
   deploy:
     runs-on: ubuntu-latest
