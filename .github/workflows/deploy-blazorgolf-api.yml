@@ -56,7 +56,7 @@ jobs:
         shell: bash
         run: |
           pushd './${{ env.TESTAPP_PACKAGE_PATH }}'
-          dotnet test --collect:"XPlat Code Coverage" --configuration ${{ env.CONFIGURATION }}
+          dotnet test --collect:"XPlat Code Coverage" --configuration ${{ env.CONFIGURATION }} --results-directory ./coverage
           popd
         
       - name: ReportGenerator
@@ -86,7 +86,7 @@ jobs:
       - name: List package path contents
         shell: bash
         run: |
-          ls -ld $PWD/coveragereport
+          ls -ld $PWD/**/*
   
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.0.2
