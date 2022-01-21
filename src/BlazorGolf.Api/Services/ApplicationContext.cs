@@ -15,7 +15,6 @@ namespace BlazorGolf.Api.Services
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.HasDefaultContainer("Courses");
-
             modelBuilder.Entity<Course>().ToContainer("Courses");
             modelBuilder.Entity<Course>().HasKey(c => c.CourseId);
             modelBuilder.Entity<Course>().HasPartitionKey(c => c.PartitionKey);
