@@ -71,7 +71,7 @@ jobs:
           hide_complexity: true
           indicators: true
           output: both
-          thresholds: '60 80'
+          thresholds: '25 40'
 
       # - name: 'Run unit tests'
       #   shell: bash
