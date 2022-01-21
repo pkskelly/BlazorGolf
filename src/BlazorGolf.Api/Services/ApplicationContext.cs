@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using BlazorGolf.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorGolf.Api.Services
 {
+    [ExcludeFromCodeCoverage]
     public class ApplicationContext : DbContext
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
