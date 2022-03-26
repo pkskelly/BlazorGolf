@@ -20,6 +20,29 @@
 |**/players/{id}** | gets a player by id | creates|updates|deletes| |
 |**/players/{id}/rounds** | gets | creates|updates|deletes| |
 
+
+#### Get all courses
+
+```http
+  GET /api/courses
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
+
+#### Get course
+
+```http
+  GET /api/courses/{id:guid}
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `string (guid)` | **Required**. Course ID |
+
+
 ## Open API Support
 
 One of the goals of the project is to learn more and go a bit deeper on Open API.  For example, the project should be consumable from the Blazor app, but should also be accessible from Flow or Postman as well.

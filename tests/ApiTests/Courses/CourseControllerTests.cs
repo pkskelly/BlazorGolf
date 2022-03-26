@@ -60,7 +60,7 @@ namespace ApiTests.Courses
         public async Task CourseController_GetCourses_ReturnsCourses()
         {
             //Arrange 
-            var courses = GetFakeCourses(5);
+            var courses = CourseHelpers.GetFakeCourses(5);
 
             _courseRepository.Setup(x => x.GetAll()).ReturnsAsync(courses);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
@@ -78,7 +78,7 @@ namespace ApiTests.Courses
         public async Task CourseController_GetCourse_ReturnsCourse()
         {
             //Arrange 
-            var course = GetFakeCourse();
+            var course = CourseHelpers.GetFakeCourse();
 
             _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
@@ -96,7 +96,7 @@ namespace ApiTests.Courses
         public async Task CourseController_GetCourseBadCourseId_ReturnsNoFound()
         {
             //Arrange 
-            var course = GetFakeCourse();
+            var course = CourseHelpers.GetFakeCourse();
 
             _courseRepository.Setup(x => x.GetById(course.CourseId)).Returns(Task.FromResult<Course>(null));
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
@@ -127,7 +127,7 @@ namespace ApiTests.Courses
         public async Task CourseController_PostCourse_Returns201()
         {
             //Arrange
-            Course course = GetFakeCourse();
+            Course course = CourseHelpers.GetFakeCourse();
             _courseRepository.Setup(x => x.Create(course)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             controller.ControllerContext = new ControllerContext();
@@ -145,7 +145,7 @@ namespace ApiTests.Courses
         public async Task CourseController_PutCourse_Returns202()
         {
             //Arrange
-            Course course = GetFakeCourse();
+            Course course = CourseHelpers.GetFakeCourse();
             _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(course);
             _courseRepository.Setup(x => x.Update(course)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
@@ -164,7 +164,7 @@ namespace ApiTests.Courses
         public async Task CourseController_PutNullCourse_ReturnsBadRequest()
         {
             //Arrange
-            Course course = GetFakeCourse();
+            Course course = CourseHelpers.GetFakeCourse();
             _courseRepository.Setup(x => x.Update(course)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
             controller.ControllerContext = new ControllerContext();
@@ -181,7 +181,7 @@ namespace ApiTests.Courses
         {
             //Arrange
             var testGuid = Guid.NewGuid();
-            Course course = GetFakeCourse();
+            Course course = CourseHelpers.GetFakeCourse();
             var errorMessage = $"URI path id {testGuid.ToString()} does not match body course id {course.CourseId}!";
             _courseRepository.Setup(x => x.GetById(testGuid.ToString())).ReturnsAsync(course);
             _courseRepository.Setup(x => x.Update(course)).ReturnsAsync(course);
@@ -193,7 +193,7 @@ namespace ApiTests.Courses
             //Assert
             result.Should().BeAssignableTo<BadRequestObjectResult>();
             ((BadRequestObjectResult)result).StatusCode.Should().Be(400);
-            var props = GetDynamicProperties(((BadRequestObjectResult)result).Value);
+            var props = CourseHelpers.GetDynamicProperties(((BadRequestObjectResult)result).Value);
             props["Error"].Should().Be(errorMessage);
         }
 
@@ -201,7 +201,7 @@ namespace ApiTests.Courses
         public async Task CourseController_PutCourseIdNotInDatabase_ReturnsNotFound()
         {
             //Arrange
-            Course course = GetFakeCourse();
+            Course course = CourseHelpers.GetFakeCourse();
             Course nullCourse = null;
             _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(nullCourse);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
@@ -212,7 +212,7 @@ namespace ApiTests.Courses
             //Assert
             result.Should().BeAssignableTo<NotFoundObjectResult>();
             ((NotFoundObjectResult)result).StatusCode.Should().Be(404);
-            var props = GetDynamicProperties(((NotFoundObjectResult)result).Value);
+            var props = CourseHelpers.GetDynamicProperties(((NotFoundObjectResult)result).Value);
             props["Error"].Should().Be($"Course with id {course.CourseId} not found!");
         }
 
@@ -220,7 +220,7 @@ namespace ApiTests.Courses
         public async Task CourseController_PutInvalidCourse_ReturnsBadRequest()
         {
             //Arrange
-            Course course = GetFakeCourse();
+            Course course = CourseHelpers.GetFakeCourse();
             course.Phone = "123459";
             _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(course);
             var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
@@ -233,79 +233,44 @@ namespace ApiTests.Courses
             ((BadRequestObjectResult)result).StatusCode.Should().Be(400);
         }
 
-        private static List<Course>? GetFakeCourses(int numberOfCourses)
+
+        [Test]
+        public async Task CourseController_ValidCourseTeesEndpoint_Returns200()
         {
-            var courses = new Faker<Course>()
-                //Ensure all properties have rules. By default, StrictMode is false
-                //Set a global policy by using Faker.DefaultStrictMode if you prefer.
-                //.StrictMode(true)
-                .RuleFor(c => c.CourseId, Guid.NewGuid().ToString())
-                .RuleFor(c => c.PartitionKey, "Course")
-                .RuleFor(c => c.Name, f => f.Company.CompanyName())
-                .RuleFor(c => c.ETag, Guid.NewGuid().ToString())
-                .RuleFor(c => c.City, f => f.Address.City())
-                .RuleFor(c => c.State, f =>  f.Address.StateAbbr())
-                .RuleFor(c => c.Phone, f => f.Phone.PhoneNumberFormat())
-                .Generate(numberOfCourses);
-            return courses;
+            //Arrange
+               Course course = CourseHelpers.GetFakeCourse();
+            _courseRepository.Setup(x => x.GetById(course.CourseId)).ReturnsAsync(course);
+            var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            //Act
+            var result = await controller.GetTees(new Guid(course.CourseId));
+            //Assert
+            result.Should().NotBeNull();
+            result.Should().BeAssignableTo<OkObjectResult>();
+            ((OkObjectResult)result).StatusCode.Should().Be(200);
+            ((OkObjectResult)result).Value.Should().BeOfType<List<Tee>>();
+            ((OkObjectResult)result).Value.Should().BeEquivalentTo(course.Tees);
         }
 
-        private static Course GetFakeCourse()
+        [Test]
+        public async Task CourseController_InvalidCourseTeesEndpoint_Returns404()
         {
-            var course = new Faker<Course>()
-                //Ensure all properties have rules. By default, StrictMode is false
-                //Set a global policy by using Faker.DefaultStrictMode if you prefer.
-                //.StrictMode(true)
-                .RuleFor(c => c.CourseId, Guid.NewGuid().ToString())
-                .RuleFor(c => c.PartitionKey, "Course")
-                .RuleFor(c => c.Name, f => f.Company.CompanyName())
-                .RuleFor(c => c.ETag, Guid.NewGuid().ToString())
-                .RuleFor(c => c.City, f => f.Address.City())
-                .RuleFor(c => c.State, f => f.Address.StateAbbr())
-                .RuleFor(c => c.Phone, f => f.Phone.PhoneNumberFormat())
-                .RuleFor(c => c.Tees, f => new List<Tee>()
-                {
-                    new Tee()
-                    {
-                        TeeId = Guid.NewGuid().ToString(),
-                        Name = "Blue",
-                        Par = 72,
-                        Slope = f.Random.Int(55,155),
-                        Rating = f.Random.Double(59.0, 74.0),
-                        BogeyRating  = 104.0,
-                        FrontNineRating = 34.0,
-                        FrontNineSlope = 121,
-                        BackNineRating = 36.0,
-                        BackNineSlope  = 124
-                    },
-                    new Tee()
-                    {
-                        TeeId = Guid.NewGuid().ToString(),
-                        Name = "White",
-                        Par = 72,
-                        Slope = f.Random.Int(55,155),
-                        Rating = f.Random.Double(59.0, 74.0),
-                        BogeyRating  = 104.0,
-                        FrontNineRating = 34.0,
-                        FrontNineSlope = 121,
-                        BackNineRating = 36.0,
-                        BackNineSlope  = 124
-                    }
-                })
-                .Generate();
-            return course;
+            //Arrange
+            Course nullCourse = null;
+            var fakeCourseId = Guid.NewGuid();
+            _courseRepository.Setup(x => x.GetById(fakeCourseId.ToString())).ReturnsAsync(nullCourse);
+            var controller = new CoursesController(_validator, _courseRepository.Object, _logger.Object);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            //Act
+            var result = await controller.GetTees(fakeCourseId);
+            //Assert
+            result.Should().NotBeNull();
+            result.Should().BeAssignableTo<NotFoundObjectResult>();
+            ((NotFoundObjectResult)result).StatusCode.Should().Be(404);
+            var props = CourseHelpers.GetDynamicProperties(((NotFoundObjectResult)result).Value);
+            props["Error"].Should().Be($"Course with id {fakeCourseId.ToString()} not found!");
         }
-
-        private static Dictionary<string, object?> GetDynamicProperties(object resultValue)
-        {
-            return (resultValue.GetType()
-                               .GetProperties()
-                               .ToDictionary(p => p.Name, p => p.GetValue(resultValue)));
-        }
-
     }
 }
-
-
-
-
