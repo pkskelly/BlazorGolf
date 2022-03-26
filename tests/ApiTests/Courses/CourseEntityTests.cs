@@ -205,10 +205,10 @@ namespace ApiTests.Courses
         }
 
         [Test]
-        public void Tee_NameLessThan4_Fails()
+        public void Tee_NameLessThan3_Fails()
         {
             var tee = new Tee();
-            tee.Name = "Thi";
+            tee.Name = "Th";
             var result = _teeValidator.TestValidate(tee);
             result.ShouldHaveValidationErrorFor(x => x.Name);
         }
@@ -286,20 +286,20 @@ namespace ApiTests.Courses
         }
 
         [Test]
-        public void Tee_FrontNineRatingLessThan59_Fails()
+        public void Tee_FrontNineRatingLessThan27_5_Fails()
         {
             var tee = new Tee();
             tee.Name = "Sample passing name";
-            tee.FrontNineRating = 58.9;
+            tee.FrontNineRating = 26.9;
             var result = _teeValidator.TestValidate(tee);
             result.ShouldHaveValidationErrorFor(x => x.FrontNineRating);
         }
 
         [Test]
-        public void Tee_FrontNineRatingGreaterThan130_Fails()
+        public void Tee_FrontNineRatingGreaterThan65_Fails()
         {
             var tee = new Tee();
-            tee.FrontNineRating = 130.1;
+            tee.FrontNineRating = 65.1;
             var result = _teeValidator.TestValidate(tee);
             result.ShouldHaveValidationErrorFor(x => x.FrontNineRating);
         }
@@ -323,19 +323,19 @@ namespace ApiTests.Courses
         }
 
         [Test]
-        public void Tee_BackNineRatingLessThan59_Fails()
+        public void Tee_BackNineRatingLessThan27_5_Fails()
         {
             var tee = new Tee();
-            tee.BackNineRating = 58.9;
+            tee.BackNineRating = 27.4;
             var result = _teeValidator.TestValidate(tee);
             result.ShouldHaveValidationErrorFor(x => x.BackNineRating);
         }
 
         [Test]
-        public void Tee_BackNineRatingGreaterThan130_Fails()
+        public void Tee_BackNineRatingGreaterThan65_Fails()
         {
             var tee = new Tee();
-            tee.BackNineRating = 130.1;
+            tee.BackNineRating = 65.11;
             var result = _teeValidator.TestValidate(tee);
             result.ShouldHaveValidationErrorFor(x => x.BackNineRating);
         }

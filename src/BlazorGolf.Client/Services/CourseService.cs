@@ -95,7 +95,7 @@ namespace BlazorGolf.Client.Services
 
         public async Task<Course> UpdateCourseAsync(Course course)
         {
-            _logger.LogInformation("AddCourse called");
+            _logger.LogInformation("UpdateCourse called");
             var tokenResult = await _tokenProvider.RequestAccessToken(
                 new AccessTokenRequestOptions
                 {
@@ -111,6 +111,8 @@ namespace BlazorGolf.Client.Services
                 {
                     _logger.LogInformation("Call to API to update course succeeded.");
                     return await response.Content.ReadFromJsonAsync<Course>();
+                } else {
+                    _logger.LogError($"Call to API to update course failed : {response.StatusCode}" );                   
                 }
             }
             else

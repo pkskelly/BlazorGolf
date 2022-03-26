@@ -35,7 +35,7 @@ namespace BlazorGolf.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
-            _logger.LogInformation($"GetCourses called with no id");
+            _logger.LogInformation($"GetCourses called with no id!");
             var courses = await _repository.GetAll();
             _logger.LogInformation("GetCourses returning");
             return Ok(courses);
@@ -47,19 +47,40 @@ namespace BlazorGolf.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(Guid id)
         {
-            _logger.LogInformation($"GetCourses called with id: {id.ToString()}");
+            _logger.LogInformation($"GetCourse called with id: {id.ToString()}");
             var course = await _repository.GetById(id.ToString());
             if (course == null)
             {
-                _logger.LogWarning($"GetCourses called with invalid id: {id.ToString()}");
+                _logger.LogWarning($"GetCourse called with invalid id: {id.ToString()}");
                 return NotFound(
                     new
                     {
-                        Error = $"Course with id {id.ToString()} not found"
+                        Error = $"Course with id {id.ToString()} not found!"
                     }
                 );
             }
             return Ok(course);
+        }
+
+        // GET: api/courses/6394652d-b853-408a-a2aa-b3b59d8abf82/tees
+        [HttpGet("{id:guid}/tees", Name = "GetTees")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTees(Guid id)
+        {
+            _logger.LogInformation($"GetTees called with id: {id.ToString()}");
+            var course = await _repository.GetById(id.ToString());
+            if (course == null)
+            {
+                _logger.LogWarning($"GetTees called with invalid id: {id.ToString()}");
+                return NotFound(
+                    new
+                    {
+                        Error = $"Course with id {id.ToString()} not found!"
+                    }
+                );
+            }
+            return Ok(course.Tees);
         }
 
         // POST api/courses
@@ -89,7 +110,7 @@ namespace BlazorGolf.Api.Controllers
                 return BadRequest(
                     new
                     {
-                        Error = $"Course with id {course.CourseId} already exists"
+                        Error = $"Course with id {course.CourseId} already exists!"
                     }
                 );
             }

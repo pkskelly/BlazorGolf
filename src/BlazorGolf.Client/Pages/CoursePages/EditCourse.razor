@@ -2,47 +2,138 @@
 @page "/coursepages/editcourse/{courseid:guid}"
 
 @inherits EditCourseBase
+@inject IDialogService DialogService
+
 
 <h1 class="page-title">Edit Course</h1>
 
-<MudCard>
-	<MudForm Model="@model" @ref="@form" @bind-IsValid="@FormValid">
+<MudForm Model="@Model" @ref="@Form" @bind-IsValid="@FormValid">
+	<MudCard Outlined="true">
+		<MudCardActions>
+			<MudButton Disabled="@(!FormValid)" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
+				OnClick="@(async () => await HandleSubmit())">@ButtonText Course</MudButton>
+			<AuthorizeView Roles="weather.admin">
+				<ChildContent>
+					<MudButton Disabled="@(!FormValid)" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto"
+						OnClick="@(async () => await HandleDelete())">Delete Course</MudButton>
+				</ChildContent>
+				<NotAuthorized>
+					<MudButton Disabled="true" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto">Delete
+						Course</MudButton>
+				</NotAuthorized>
+			</AuthorizeView>
+		</MudCardActions>
+		<MudCardHeader>
+			<CardHeaderContent>
+				<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Course Detail</MudText>
+			</CardHeaderContent>
+		</MudCardHeader>
 		<MudCardContent>
-
-				<MudTextField @bind-Value="model.Name"
-							  Validation="@(courseValidator.ValidateValue)"
-							  For="@(() => model.Name)"
-							  Immediate="true"
-							  Label="Name"/>
-
-				<MudTextField @bind-Value="model.City"
-							  Validation="@(courseValidator.ValidateValue)"
-							  For="@(() => model.City)"
-							  Immediate="true"
-							  Label="City" />
-
-				<MudTextField @bind-Value="model.State"
-							  Validation="@(courseValidator.ValidateValue)"
-							  For="@(() => model.State)"
-							  Immediate="true"
-							  Label="State" />
-                
-   				<MudTextField @bind-Value="model.Phone"
-							  Validation="@(courseValidator.ValidateValue)"
-							  For="@(() => model.Phone)"
-							  Immediate="true"
-							  Label="Phone" />
-        </MudCardContent>
-	</MudForm>
-    <MudCardActions>
-        <MudButton Disabled="@(!FormValid)" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await HandleSubmit())">@ButtonText</MudButton>
-		<AuthorizeView Roles="weather.admin">
-			<ChildContent>
-		        <MudButton Disabled="@(!FormValid)" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto" OnClick="@(async () => await HandleDelete())">Delete</MudButton>		
-			</ChildContent>
-			<NotAuthorized>
-		        <MudButton Disabled="true" Variant="Variant.Filled" Color="Color.Error" Class="ml-auto">Delete</MudButton>
-			</NotAuthorized>
-		</AuthorizeView>
-    </MudCardActions>
-</MudCard>
+			<MudTextField @bind-Value="Model.Name" Validation="@(courseValidator.ValidateValue)"
+				For="@(() => Model.Name)" Immediate="true" Label="Name" />
+			<MudTextField @bind-Value="Model.City" Validation="@(courseValidator.ValidateValue)"
+				For="@(() => Model.City)" Immediate="true" Label="City" />
+			<MudTextField @bind-Value="Model.State" Validation="@(courseValidator.ValidateValue)"
+				For="@(() => Model.State)" Immediate="true" Label="State" />
+			<MudTextField @bind-Value="Model.Phone" Validation="@(courseValidator.ValidateValue)"
+				For="@(() => Model.Phone)" Immediate="true" Label="Phone" />
+		</MudCardContent>
+	</MudCard>
+	<MudDivider />
+	<MudCard>
+		<MudCardHeader>
+			<CardHeaderContent>
+				<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-2">Tees</MudText>
+			</CardHeaderContent>
+		</MudCardHeader>
+		<MudCardContent>
+			<MudPaper Elevation="25">
+				<MudToolBar>
+					<MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="@((e) => HandleNewTee())" />
+					@* <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Inherit" />
+					<MudIconButton Icon="@Icons.Material.Outlined.Remove" Color="Color.Inherit" /> *@
+				</MudToolBar>
+				@* //TODO: Make this editable only of the user is in the admins role *@
+				@* <MudTable Items="@Tees" Dense="true" Hover="true" ReadOnly="false" CanCancelEdit="true"> *@
+				<MudTable Items="@Tees" Dense="true" Hover="true" ReadOnly="true">
+					<HeaderContent>
+						<MudTh>Name</MudTh>
+						<MudTh>Par</MudTh>
+						<MudTh>Slope</MudTh>
+						<MudTh>Rating</MudTh>
+						<MudTh>Bogey Rating</MudTh>
+						<MudTh>FrontNineRating</MudTh>
+						<MudTh>FrontNineSlope</MudTh>
+						<MudTh>BackNineRating</MudTh>
+						<MudTh>BackNineSlope</MudTh>
+					</HeaderContent>
+					<RowTemplate>
+						<MudTd DataLabel="Name">@context.Name</MudTd>
+						<MudTd DataLabel="Par">@context.Par</MudTd>
+						<MudTd DataLabel="Slope">@context.Slope</MudTd>
+						<MudTd DataLabel="Rating">@context.Rating</MudTd>
+						<MudTd DataLabel="BogeyRating">@context.BogeyRating</MudTd>
+						<MudTd DataLabel="FrontNineRating">@context.FrontNineRating</MudTd>
+						<MudTd DataLabel="FrontNineSlope">@context.FrontNineSlope</MudTd>
+						<MudTd DataLabel="BackNineRating">@context.BackNineRating</MudTd>
+						<MudTd DataLabel="BackNineSlope">@context.BackNineSlope</MudTd>
+						<MudTd DataLabel="">
+							<MudIcon Class="ma-4" Icon="@Icons.Outlined.Edit" @onclick="@(() => Edit(@context.TeeId))" Size="Size.Small"></MudIcon>        
+							<MudIcon Class="ma-4" Icon="@Icons.Outlined.Delete"  Size="Size.Small"></MudIcon>        
+						</MudTd>
+					</RowTemplate>
+					@* <RowEditingTemplate>
+						<MudTd DataLabel="Name">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.Name" Validation="@(courseValidator.ValidateValue)" Label="Name" For="@(() => context.Name)" />
+							</MudForm>
+						</MudTd>
+						<MudTd DataLabel="Par">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.Par" Validation="@(courseValidator.ValidateValue)" Label="Par" For="@(() => context.Par)" />
+							</MudForm>
+						</MudTd>
+						<MudTd DataLabel="Slope">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.Slope" Validation="@(courseValidator.ValidateValue)" Label="Slope" For="@(() => context.Slope)" />
+							</MudForm>
+						</MudTd>
+						<MudTd DataLabel="Rating">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.Rating" Validation="@(courseValidator.ValidateValue)" Label="Rating" For="@(() => context.Rating)" />
+							</MudForm>
+						</MudTd>
+						<MudTd DataLabel="BogeyRating">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.BogeyRating" Validation="@(courseValidator.ValidateValue)" Label="BogeyRating" For="@(() => context.BogeyRating)" />
+							</MudForm>
+						</MudTd>
+						<MudTd DataLabel="FrontNineRating">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.FrontNineRating" Validation="@(courseValidator.ValidateValue)" Label="FrontNineRating" For="@(() => context.FrontNineRating)" />
+							</MudForm>
+						</MudTd>
+						<MudTd DataLabel="FrontNineSlope">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.FrontNineSlope" Validation="@(courseValidator.ValidateValue)" Label="FrontNineSlope" For="@(() => context.FrontNineSlope)" />
+							</MudForm>
+						</MudTd>
+						<MudTd DataLabel="BackNineRating">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.BackNineRating" Validation="@(courseValidator.ValidateValue)" Label="BackNineRating" For="@(() => context.BackNineRating)" />
+							</MudForm>
+						</MudTd>
+						<MudTd DataLabel="BackNineSlope">
+							<MudForm @ref="@Form" Model="context">
+								<MudTextField @bind-Value="@context.BackNineSlope"Validation="@(courseValidator.ValidateValue)" Label="BackNineSlope" For="@(() => context.BackNineSlope)" />
+							</MudForm>
+						</MudTd>
+						<MudIcon Class="ma-4" Icon="@Icons.Outlined.Delete"  Size="Size.Small"></MudIcon>        
+						<MudIcon Class="ma-4" Icon="@Icons.Outlined.Delete"  Size="Size.Small"></MudIcon>        
+					</RowEditingTemplate> *@
+				</MudTable>
+			</MudPaper>
+		</MudCardContent>
+	</MudCard>
+	<MudDivider />
+</MudForm>

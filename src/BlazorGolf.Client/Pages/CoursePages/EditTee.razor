@@ -1,0 +1,44 @@
+@page "/coursepages/edittee/{courseid:guid}/{teeid:guid}"
+
+@using MudBlazor.Components
+@inherits EditTeeBase
+
+<h1 class="page-title">Edit Tee</h1>
+
+<p>@Message</p>
+
+@if (Model == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MudTable Items="@Holes" Dense="true" Hover="true" ReadOnly="false" CanCancelEdit="true">
+    <HeaderContent>
+        <MudTh>Number</MudTh>
+        <MudTh>Length</MudTh>
+        <MudTh>Par</MudTh>
+        <MudTh>Handicap</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Number">@context.Number</MudTd>
+        <MudTd DataLabel="Length">@context.Distance</MudTd>
+        <MudTd DataLabel="Par">@context.Par</MudTd>
+        <MudTd DataLabel="Handicap">@context.HandicapIndex</MudTd>
+    </RowTemplate>
+    @* <RowEditingTemplate>
+        <MudTd DataLabel="Hole">
+        <MudForm @ref="Form" Model="context">
+        <MudTextField @bind-Value="@context.Number" Validation="@(Validator.ValidateValue)" Label="Name" For="@(() =>
+        context.Name)" />
+        </MudForm>
+        </MudTd>
+        <MudTd DataLabel="Date">
+        <MudForm @ref="Form" Model="context">
+        <MudTextField @bind-Value="@context.Email" Validation="@(Validator.ValidateValue)" Label="E-mail" For="@(() =>
+        context.Email)" />
+        </MudForm>
+        </MudTd>
+        </RowEditingTemplate> *@
+</MudTable>
+}
