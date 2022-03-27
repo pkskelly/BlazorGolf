@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace BlazorGolf.Core.Models
 {
-    public class TeeValidator : AbstractValidator<Tee>
+    public class TeeValidator : BlazorGolfBaseValidator<Tee>
     {
         public TeeValidator()
         {

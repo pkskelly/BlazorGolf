@@ -1,0 +1,44 @@
+@inherits EditTeeDialogBase
+
+@using FluentValidation
+
+<div style="max-width: 400px;">
+    <MudCard>
+		<MudForm Model="@Model" @ref="@Form">
+			<MudCardContent>
+
+					<MudTextField @bind-Value="Model.Name" Validation="@(TeeValidator.ValidateValue)"  For="@(() => Model.Name)" Immediate="true" Label="Name" />
+
+					<MudTextField @bind-Value="Model.Par" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.Par)" Immediate="true" Label="Par" />
+
+					@* <MudTextField @bind-Value="model.CCNumber"
+								  Validation="@(teeValidator.ValidateValue)"
+								  For="@(() => model.CCNumber)"
+								  Immediate="true"
+								  Label="Credit card nr" />
+
+					<MudTextField @bind-Value="model.Address.Address"
+								  Validation="@(teeValidator.ValidateValue)"
+								  For="@(() => model.Address.Address)"
+								  Immediate="true"
+								  Label="Address" />
+
+					<MudTextField @bind-Value="model.Address.City"
+								  Validation="@(teeValidator.ValidateValue)"
+								  For="@(() => model.Address.City)"
+								  Immediate="true"
+								  Label="City" />
+
+					<MudTextField @bind-Value="model.Address.Country"
+								  Validation="@(teeValidator.ValidateValue)"
+								  For="@(() => model.Address.Country)"
+								  Immediate="true"
+								  Label="Country" /> *@
+
+			</MudCardContent>
+		</MudForm>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Add</MudButton>
+        </MudCardActions>
+    </MudCard>
+</div>
