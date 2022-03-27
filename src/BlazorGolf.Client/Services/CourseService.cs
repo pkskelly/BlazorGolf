@@ -112,7 +112,7 @@ namespace BlazorGolf.Client.Services
                     _logger.LogInformation("Call to API to update course succeeded.");
                     return await response.Content.ReadFromJsonAsync<Course>();
                 } else {
-                    _logger.LogError($"Call to API to update course failed : {response.StatusCode}" );                   
+                    _logger.LogError($"Call to API to update course failed : {response.StatusCode} {response.RequestMessage}" );                   
                 }
             }
             else
