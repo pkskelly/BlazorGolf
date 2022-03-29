@@ -114,41 +114,51 @@ namespace BlazorGolf.Client.Pages
 
         public async Task HandleEditTee(string teeId)
         {
-            await Form.Validate();
-            Logger?.LogInformation($"Form is valid: {Form.IsValid}");
-            Logger?.LogInformation($"Editing TeeId {teeId}");
+            Logger?.LogInformation($"Launching EditTeeDialog with TeeId {teeId}");
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraLarge };
+            var parameters = new DialogParameters
+            {
+                { "Model", CurrentCourse.Tees.Where(t => t.TeeId == teeId).FirstOrDefault()},
+            };
 
             //Edit Tee
-            // var parameters = new DialogParameters();
-            // parameters.Add("ContentText", "Do you really want to delete these records? This process cannot be undone.");
-            // parameters.Add("ButtonText", "Delete");
-            // parameters.Add("Color", Color.Error);
-
-            // var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-
-            // DialogService.Show<EditTeeDialog>("Add", parameters, options);
-
-            Logger?.LogInformation($"Edited Tee added - {CurrentCourse?.Tees.ToList().Count} tees in collection.");
-
+            var resultMessage = "Edit cancelled!";
+            var dialog = DialogService.Show<EditTeeDialog>("Edit Tee", parameters, options);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                 Logger?.LogInformation($"Edited Tee name - {((Tee)result.Data).Name}");
+                
+                //Remove tee with teeId and reset Course.Tees value
+                List<Tee> tees = CurrentCourse.Tees.Where(t => t.TeeId != teeId).ToList();
+                tees.Add((Tee)result.Data);
+                CurrentCourse.Tees = tees;
+                Logger?.LogInformation($"Edited Tee added - {CurrentCourse?.Tees.ToList().Count} tees in collection.");
+                resultMessage = "Edit complete!";
+            }
+            else
+            {
+                Logger?.LogInformation(resultMessage);
+            }
             //--- Refresh Page...
             await InvokeAsync(() => StateHasChanged());
-            Snackbar?.Add("Tee updated!");
-
+            Snackbar?.Add(resultMessage);
         }
 
         public async Task HandleDeleteTee(string teeId)
         {
             Logger?.LogInformation($"Removing TeeId {teeId}");
 
-            var parameters = new DialogParameters();
-            parameters.Add("ContentText", "Do you really want to delete this Tee?");
-            parameters.Add("ButtonText", "Delete");
-            parameters.Add("Color", Color.Error);
-
-            var dialog = DialogService.Show<ConfirmationDialog>("Delete Server", parameters);
-            var result = await dialog.Result;
-
             var resultMessage = "Remove cancelled!";
+
+            var parameters = new DialogParameters
+            {
+                { "ContentText", "Do you really want to delete this Tee?" },
+                { "ButtonText", "Delete" },
+                { "Color", Color.Error }
+            };
+            var dialog = DialogService.Show<ConfirmationDialog>("Delete Tee", parameters);
+            var result = await dialog.Result;
             if (!result.Cancelled)
             {
                 //Remove tee with teeId and reset Course.Tees value
