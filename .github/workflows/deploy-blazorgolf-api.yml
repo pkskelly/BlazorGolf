@@ -76,7 +76,7 @@ jobs:
           hide_complexity: true
           indicators: true
           output: both
-          thresholds: '60 80'
+          thresholds: '35 45'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
