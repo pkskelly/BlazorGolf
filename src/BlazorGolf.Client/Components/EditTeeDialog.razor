@@ -4,41 +4,22 @@
 
 <div style="max-width: 400px;">
     <MudCard>
-		<MudForm Model="@Model" @ref="@Form">
+		<MudForm Model="@Model" @ref="@Form" @bind-IsValid="@FormValid">
 			<MudCardContent>
-
-					<MudTextField @bind-Value="Model.Name" Validation="@(TeeValidator.ValidateValue)"  For="@(() => Model.Name)" Immediate="true" Label="Name" />
-
+   					<MudTextField @bind-Value="Model.TeeId" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.TeeId)" Immediate="true" Label="Par" />
+					<MudTextField @bind-Value="Model.Name" Validation="@(TeeValidator.ValidateValue)"For="@(() => Model.Name)" Immediate="true" Label="Name" />
 					<MudTextField @bind-Value="Model.Par" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.Par)" Immediate="true" Label="Par" />
-
-					@* <MudTextField @bind-Value="model.CCNumber"
-								  Validation="@(teeValidator.ValidateValue)"
-								  For="@(() => model.CCNumber)"
-								  Immediate="true"
-								  Label="Credit card nr" />
-
-					<MudTextField @bind-Value="model.Address.Address"
-								  Validation="@(teeValidator.ValidateValue)"
-								  For="@(() => model.Address.Address)"
-								  Immediate="true"
-								  Label="Address" />
-
-					<MudTextField @bind-Value="model.Address.City"
-								  Validation="@(teeValidator.ValidateValue)"
-								  For="@(() => model.Address.City)"
-								  Immediate="true"
-								  Label="City" />
-
-					<MudTextField @bind-Value="model.Address.Country"
-								  Validation="@(teeValidator.ValidateValue)"
-								  For="@(() => model.Address.Country)"
-								  Immediate="true"
-								  Label="Country" /> *@
-
+					<MudTextField @bind-Value="Model.BogeyRating" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.BogeyRating)" Immediate="true" Label="BogeyRating" />
+					<MudTextField @bind-Value="Model.Rating" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.Rating)" Immediate="true" Label="Rating" />
+					<MudTextField @bind-Value="Model.Slope" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.Slope)" Immediate="true" Label="Slope" />
+					<MudTextField @bind-Value="Model.FrontNineRating" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.FrontNineRating)" Immediate="true" Label="FrontNineRating" />
+					<MudTextField @bind-Value="Model.FrontNineSlope" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.FrontNineSlope)" Immediate="true" Label="FrontNineSlope" />
+					<MudTextField @bind-Value="Model.BackNineRating" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.BackNineRating)" Immediate="true" Label="BackNineRating" />
+					<MudTextField @bind-Value="Model.BackNineSlope" Validation="@(TeeValidator.ValidateValue)" For="@(() => Model.BackNineSlope)" Immediate="true" Label="BackNineSlope" />
 			</MudCardContent>
 		</MudForm>
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Add</MudButton>
+            <MudButton Disabled="@(!FormValid)" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Update</MudButton>
         </MudCardActions>
     </MudCard>
 </div>

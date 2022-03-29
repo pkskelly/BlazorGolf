@@ -9,26 +9,33 @@ namespace BlazorGolf.Client.Components
         [Inject]
         ISnackbar? Snackbar { get; set; }
 
+        [CascadingParameter]
+        MudDialogInstance MudDialog { get; set; } = null!;
+
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
         [Inject]
         public ILogger<EditTeeDialogBase>? Logger { get; set; }
 
+        [Parameter]
+        public Tee? Model { get; set; }
 
         public MudForm Form = null!;
         public bool FormValid { get; set; }
-        public bool IsNewCourse { get; set; } = true;
-        public Tee? Model { get; set; } = new Tee();
         public TeeValidator TeeValidator = new();
- 
 
         public async Task Submit()
         {
             await Form.Validate();
             if (Form.IsValid)
             {
-                Snackbar.Add("New Tee submitted!");
+                Logger?.LogInformation("Valid form for updating Tee");
+                MudDialog.Close(DialogResult.Ok(Model));
+            }
+            else
+            {
+                Logger?.LogInformation("Invalid form for updating Tee");
             }
         }
     }
