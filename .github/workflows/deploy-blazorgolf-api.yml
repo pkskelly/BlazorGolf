@@ -98,7 +98,7 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
